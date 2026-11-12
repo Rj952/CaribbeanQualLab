@@ -1,0 +1,1340 @@
+<!doctype html>
+<!--
+  Caribbean Qualitative Research Lab (CQRL) — Community Edition
+  SPDX-License-Identifier: AGPL-3.0-or-later
+  Created by Dr. Rohan Jowallah. Copyright (C) 2026 Dr. Rohan Jowallah. All rights reserved except as granted by the AGPL-3.0.
+  ADDITIONAL TERMS (AGPL-3.0 section 7(b)): every copy or modified version must preserve the attribution
+  "Created by Dr. Rohan Jowallah", both in the visible user interface (navigation and About screen) and in this
+  notice. See NOTICE and CREATIVE-RIGHTS.md.
+  Commercial licences are available from the copyright holder — see COMMERCIAL-LICENSE.md.
+  "Caribbean Qualitative Research Lab" and "CQRL" are trademarks of the copyright holder — see TRADEMARKS.md.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caribbean Qualitative Research Lab</title>
+<meta name="author" content="Dr. Rohan Jowallah">
+<meta name="description" content="Free, offline, AI-free qualitative analysis: code, connect literature, infer, interpret, triangulate and write up.">
+<style>
+/* Caribbean palette — every text/background pair meets WCAG 2.2 AA (4.5:1) in light and dark modes */
+:root{
+  --bg:#cfe6f8;--panel:#fffdf8;--ink:#1d1a2b;--muted:#5c4f63;--line:#c9dcee;--soft:#fff0d6;--on:#fff;
+  --sun:#ffc533;--danger:#b3261e;--ok:#2b7a2f;--warn:#9c4f00;
+  --c-sea:#08655f;--c-ocean:#1556a0;--c-hibiscus:#b3155a;--c-palm:#21652a;--c-bougain:#7b2fa8;--c-sunset:#a5351a;--c-indigo:#3546a8;--c-mahogany:#8a4517;--c-mango:#8f4800;--c-night:#123a5c;
+  --b-sea:#3ee0c8;--b-ocean:#6cb4ff;--b-hibiscus:#ff6fa8;--b-palm:#7ddc6a;--b-bougain:#c99bff;--b-sunset:#ff8a5c;--b-indigo:#9aa8ff;--b-mahogany:#e3a06a;--b-mango:#ffb340;--b-night:#9fc3e8;
+  --sec:var(--c-sea);--brand:var(--c-sea);--accent:var(--c-hibiscus);
+  --madras:linear-gradient(90deg,#c2185b 0 16.6%,#ffc533 0 33.3%,#2b7a2f 0 50%,#0a9e94 0 66.6%,#ff6b3d 0 83.3%,#7b2fa8 0);
+  --shadow:0 2px 0 rgba(29,26,43,.04),0 8px 24px rgba(156,79,0,.08)
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#0c2440;--panel:#123153;--ink:#f3efe6;--muted:#a9b6c8;--line:#2a4f78;--soft:#173d63;--on:#0e1a2b;--danger:#ff8a80;--ok:#7ddc6a;--warn:#ffb340;
+  --c-sea:#3ee0c8;--c-ocean:#6cb4ff;--c-hibiscus:#ff6fa8;--c-palm:#7ddc6a;--c-bougain:#c99bff;--c-sunset:#ff8a5c;--c-indigo:#9aa8ff;--c-mahogany:#e3a06a;--c-mango:#ffb340;--c-night:#9fc3e8;--shadow:none}}
+:root[data-theme=dark]{--bg:#0c2440;--panel:#123153;--ink:#f3efe6;--muted:#a9b6c8;--line:#2a4f78;--soft:#173d63;--on:#0e1a2b;--danger:#ff8a80;--ok:#7ddc6a;--warn:#ffb340;
+  --c-sea:#3ee0c8;--c-ocean:#6cb4ff;--c-hibiscus:#ff6fa8;--c-palm:#7ddc6a;--c-bougain:#c99bff;--c-sunset:#ff8a5c;--c-indigo:#9aa8ff;--c-mahogany:#e3a06a;--c-mango:#ffb340;--c-night:#9fc3e8;--shadow:none}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:radial-gradient(circle at 100% 0,rgba(255,197,51,.22),transparent 360px) fixed,linear-gradient(180deg,transparent 40%,rgba(21,86,160,.10)) fixed,var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--sec);font-weight:600}
+:focus-visible{outline:3px solid var(--sec);outline-offset:2px;border-radius:6px}
+.serif{font-family:Georgia,"Iowan Old Style","Palatino Linotype",serif}
+
+/* ---------- header ---------- */
+header.top{display:flex;align-items:center;gap:10px;padding:10px 16px 14px;background:linear-gradient(110deg,#123a5c 0%,#0a6e68 48%,#1556a0 100%);color:#fff;position:sticky;top:0;z-index:20;flex-wrap:wrap}
+header.top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:var(--madras)}
+.logo{display:flex;align-items:center;gap:10px;white-space:nowrap}
+.logo b{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe08a,#ffc533 45%,#ff8a3d 100%);color:#1d1a2b;font:800 14px Georgia,serif;box-shadow:0 0 0 3px rgba(255,255,255,.25)}
+.logo span{font:700 18px/1.15 Georgia,"Palatino Linotype",serif;letter-spacing:.01em}
+.logo small{display:block;font:600 11px system-ui,sans-serif;color:#ffd96a;letter-spacing:.08em;text-transform:uppercase}
+.grow{flex:1}
+header.top .btn{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.45);color:#fff}
+header.top .btn:hover{background:rgba(255,255,255,.22);border-color:#fff}
+header.top .btn.primary{background:var(--sun);border-color:var(--sun);color:#1d1a2b;font-weight:700}
+header.top select{background:#fff;color:#1d1a2b;border-color:transparent}
+.status{font-size:12px;color:#e6f6f4;white-space:nowrap}
+.status.bad{color:#1d1a2b;background:var(--sun);padding:2px 8px;border-radius:999px;font-weight:700}
+
+/* ---------- navigation ---------- */
+.shell{display:grid;grid-template-columns:214px 1fr;min-height:calc(100% - 64px)}
+nav.side{background:linear-gradient(180deg,#123a5c,#0b2740 70%,#3a1a3f);color:#fff;padding:14px 10px;position:sticky;top:64px;height:calc(100vh - 64px);overflow:auto}
+nav.side button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:8px 10px;border:0;background:none;border-radius:12px;cursor:pointer;color:#f3efe6;font-weight:500}
+nav.side button:hover{background:rgba(255,255,255,.1)}
+nav.side .n{display:inline-grid;place-items:center;min-width:26px;height:26px;border-radius:50%;font-size:11px;font-weight:800;background:var(--sc);color:#0e1a2b;flex:none}
+nav.side button.on{background:var(--sc);color:#0e1a2b;font-weight:700;box-shadow:inset 4px 0 0 var(--sun)}
+nav.side button.on .n{background:#0e1a2b;color:var(--sc)}
+nav.side hr{border:0;height:4px;border-radius:2px;background:var(--madras);opacity:.8;margin:12px 6px}
+nav.side .cap{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#ffd96a;padding:6px 10px 4px;font-weight:700}
+
+/* ---------- page ---------- */
+main{padding:22px 26px 40px;min-width:0}
+main>h1:first-child{position:relative;overflow:hidden;margin:0 0 12px;padding:18px 22px 24px;border-radius:20px;background:var(--sec);color:var(--on);font:700 26px/1.2 Georgia,"Palatino Linotype",serif;box-shadow:var(--shadow)}
+main>h1:first-child::before{content:"";position:absolute;right:-30px;top:-40px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(255,197,51,.55),rgba(255,197,51,0) 70%)}
+main>h1:first-child::after{content:"";position:absolute;left:0;right:0;bottom:6px;height:12px;opacity:.5;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 12'%3E%3Cpath d='M0 6 Q7.5 0 15 6 T30 6 T45 6 T60 6' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E") repeat-x;background-size:60px 12px}
+h1{font:700 24px/1.2 Georgia,serif;margin:0 0 6px}
+h2{font:700 19px/1.3 Georgia,"Palatino Linotype",serif;margin:22px 0 10px;color:var(--sec)}
+h3{font-size:15px;margin:14px 0 6px}
+p.lead{color:var(--ink);margin:0 0 16px;max-width:82ch;font-size:15.5px}
+.card{background:var(--panel);border:1px solid var(--line);border-top:5px solid var(--sec);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+.card>h2:first-child,.card>h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row.end{justify-content:flex-end}
+
+/* ---------- controls ---------- */
+.btn{border:2px solid var(--sec);background:var(--panel);color:var(--sec);padding:6px 13px;border-radius:999px;cursor:pointer;white-space:nowrap;font-weight:600;transition:transform .08s,box-shadow .15s}
+.btn:hover{box-shadow:0 3px 0 var(--sun);transform:translateY(-1px)}
+.btn:disabled{opacity:.45;cursor:default;transform:none;box-shadow:none}
+.btn.primary{background:var(--sec);color:var(--on)}
+.btn.ghost{border-color:transparent;background:none}
+.btn.danger{border-color:var(--danger);color:var(--danger)}
+.btn.sm{padding:2px 10px;font-size:12.5px;border-width:1.5px}
+input[type=text],input[type=search],input:not([type]),select,textarea{border:1.5px solid var(--line);background:var(--panel);border-radius:10px;padding:7px 9px;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--sec);outline:3px solid color-mix(in srgb,var(--sec) 25%,transparent);outline-offset:0}
+textarea{min-height:64px;resize:vertical}
+input[type=color]{width:32px;height:28px;padding:0;border:2px solid var(--line);border-radius:8px;background:none;cursor:pointer}
+input[type=checkbox]{accent-color:var(--sec);width:16px;height:16px}
+label.f{display:block;font-weight:700;font-size:13.5px;margin:12px 0 3px}
+.hint{font-size:12.5px;color:var(--muted);margin:2px 0 4px}
+.muted{color:var(--muted)}
+table.t{border-collapse:collapse;width:100%;font-size:13.5px}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:7px;text-align:left;vertical-align:top}
+table.t th{font-size:12px;color:var(--on);font-weight:700;position:sticky;top:0;background:var(--sec);text-transform:uppercase;letter-spacing:.04em}
+table.t th .muted{color:inherit;opacity:.85}
+table.t tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--soft) 60%,transparent)}
+.scroll{overflow:auto}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:600;background:var(--soft);color:var(--ink);background:color-mix(in srgb,var(--sec) 14%,var(--panel))}
+.bar{height:8px;border-radius:4px;background:var(--soft);overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--sec),var(--c-mango),var(--sun));border-radius:4px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--panel);border-radius:999px;padding:3px 11px 3px 6px;margin:2px;cursor:pointer;font-size:13px}
+.chip i{width:13px;height:13px;border-radius:50%;background:var(--c);flex:none;box-shadow:0 0 0 2px var(--panel),0 0 0 3px var(--c)}
+.chip:hover{border-color:var(--c)}
+.chip.on{background:var(--c);border-color:var(--c);color:var(--t,#111);font-weight:700}
+.chip.on i{box-shadow:0 0 0 2px var(--t,#111)}
+.chip kbd{font-size:10.5px;opacity:.75;font-family:inherit}
+.chip[draggable=true]{cursor:grab}
+
+/* ---------- coding workspace ---------- */
+.ws{display:grid;grid-template-columns:240px minmax(0,1fr) 390px;gap:14px;height:calc(100vh - 108px)}
+.ws>div{min-height:0}
+.pane{background:var(--panel);border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column;min-height:0;overflow:hidden;box-shadow:var(--shadow)}
+.pane>.hd{padding:10px 12px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--sec) 8%,var(--panel))}
+.pane>.bd{padding:12px 14px;overflow:auto;flex:1}
+.ws>.pane:first-child{border-top:5px solid var(--c-ocean)}
+.ws>.pane:nth-child(2){border-top:5px solid var(--c-hibiscus)}
+.ws>.pane:last-child{border-top:5px solid var(--c-sea)}
+.srcitem{display:block;width:100%;text-align:left;border:0;background:none;padding:7px 9px;border-radius:10px;cursor:pointer;margin-bottom:2px}
+.srcitem:hover{background:var(--soft)}.srcitem.on{background:var(--soft);box-shadow:inset 4px 0 0 var(--c-hibiscus)}
+.srcitem .bar{margin-top:4px;height:5px}
+.transcript{white-space:pre-wrap;font-size:16px;line-height:1.85;font-family:Georgia,"Times New Roman",serif;max-width:78ch}
+mark.hl{color:inherit;border-radius:3px;cursor:pointer;padding:2px 0}
+mark.hl.on{outline:3px solid var(--sun);outline-offset:1px;box-shadow:0 0 0 5px rgba(29,26,43,.25)}
+blockquote{margin:6px 0;padding:9px 12px;border-left:5px solid var(--c-hibiscus);background:var(--soft);border-radius:0 12px 12px 0;font-family:Georgia,serif}
+.step{display:flex;gap:10px;align-items:flex-start;margin-top:14px}
+.step .no{flex:none;display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--stc,var(--sec));color:var(--on);font-size:12px;font-weight:800;margin-top:6px}
+.step:nth-of-type(1) .no{--stc:var(--c-ocean)}.step:nth-of-type(2) .no{--stc:var(--c-hibiscus)}.step:nth-of-type(3) .no{--stc:var(--c-palm)}
+.step:nth-of-type(4) .no{--stc:var(--c-mango)}.step:nth-of-type(5) .no{--stc:var(--c-bougain)}.step:nth-of-type(6) .no{--stc:var(--c-sunset)}
+.step>div{flex:1;min-width:0}
+
+/* ---------- journey, boards, misc ---------- */
+.journey{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:4px 0 18px}
+.journey button{border:0;background:var(--jc);color:var(--on);border-radius:999px;padding:6px 14px;cursor:pointer;font-weight:700;box-shadow:0 3px 0 color-mix(in srgb,var(--jc) 55%,#000)}
+.journey button:hover{transform:translateY(-1px)}
+.journey span{color:var(--c-mango);font-weight:800}
+.metric{display:flex;justify-content:space-between;font-size:13.5px;margin-top:10px}
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;align-items:start}
+.drop{min-height:46px;border:2px dashed var(--line);border-radius:12px;padding:6px;margin-top:8px}
+.drop.over{border-color:var(--sec);background:var(--soft)}
+.card.theme-card{border-top:8px solid var(--c);background:linear-gradient(180deg,color-mix(in srgb,var(--c) 10%,var(--panel)) 0,var(--panel) 90px)}
+.hit{padding:10px 0;border-bottom:1px dashed var(--line)}
+.hit em{font-style:normal;background:var(--sun);color:#1d1a2b;border-radius:3px;padding:0 2px;font-weight:700}
+.cell{cursor:pointer;text-align:center!important;font-variant-numeric:tabular-nums;font-weight:600}
+.cell.sel{outline:3px solid var(--sun);outline-offset:-3px}
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.tabs button{border:2px solid var(--sec);background:var(--panel);color:var(--sec);border-radius:999px;padding:6px 14px;cursor:pointer;font-weight:600}
+.tabs button.on{background:var(--sec);color:var(--on)}
+details>summary{cursor:pointer;font-weight:700}
+.ov{position:fixed;inset:0;background:rgba(14,26,43,.55);display:grid;place-items:center;z-index:100;padding:16px}
+.dlg{background:var(--panel);border-radius:20px;padding:20px;width:min(560px,100%);max-height:90vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.35);border-top:8px solid transparent;border-image:var(--madras) 1;border-image-slice:1}
+.dlg h2{margin-top:0}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#123a5c;color:#fff;padding:10px 18px;border-radius:999px;z-index:200;font-size:13.5px;box-shadow:0 6px 0 var(--sun)}
+.banner{background:var(--sun);color:#1d1a2b;padding:9px 16px;font-size:13.5px;font-weight:600}
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+svg text{fill:var(--ink);font:12px system-ui,sans-serif}
+.foot{margin:34px 0 0;padding:14px 18px;border-radius:16px;background:#123a5c;color:#f3efe6;font-size:13px;line-height:1.6;position:relative;overflow:hidden}
+.foot::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--madras)}
+.foot b{color:#ffd96a}.foot a{color:#9fe8dc}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13.5px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.btn:hover,.journey button:hover{transform:none}}
+@media (max-width:1100px){.ws{grid-template-columns:210px minmax(0,1fr);height:auto}.ws>div:last-child{grid-column:1/-1}.ws .pane>.bd{max-height:70vh}}
+@media (max-width:760px){header.top{position:relative}.shell{grid-template-columns:1fr}nav.side{position:static;height:auto;display:flex;overflow-x:auto;padding:8px;gap:4px}nav.side button{width:auto;white-space:nowrap}nav.side hr,nav.side .cap{display:none}main{padding:16px}.ws{grid-template-columns:1fr}main>h1:first-child{font-size:21px}.logo span{font-size:15px}}
+@media print{header.top,nav.side,.noprint{display:none!important}.shell{display:block}main>h1:first-child{background:none;color:#000}}
+</style>
+</head>
+<body>
+<div id="banner"></div>
+<header class="top">
+  <div class="logo"><b>CQ</b><span>Caribbean Qualitative Research Lab <small id="edition"></small></span></div>
+  <div class="grow"></div>
+  <select id="projSel" aria-label="Current project" style="width:auto;max-width:240px"></select>
+  <button class="btn sm" data-act="newProject">New</button>
+  <button class="btn sm" data-act="importBackup" title="Open a .cqrl.json backup">Open backup</button>
+  <button class="btn sm primary" data-act="exportBackup" title="Download a backup of this project">Save backup</button>
+  <span class="status" id="status" aria-live="polite"></span>
+</header>
+<div class="shell">
+  <nav class="side" id="nav" aria-label="Sections"></nav>
+  <main id="main" tabindex="-1"></main>
+</div>
+<input type="file" id="fileIn" hidden multiple>
+<script>
+'use strict';
+/* ============================================================
+   Core
+   ============================================================ */
+const APP = { name:'Caribbean Qualitative Research Lab', short:'CQRL', version:'0.1.0', edition:'Community Edition',
+  license:'GNU AGPL-3.0-or-later', author:'Dr. Rohan Jowallah', copyright:'Copyright © 2026 Dr. Rohan Jowallah',
+  repo:'https://github.com/Rj952/CaribbeanQualLab', site:'https://rj952.github.io/CaribbeanQualLab/' };
+const urlP = new URLSearchParams(location.search);
+const CFG = Object.assign({ institution:'', course:'', method:'', hide:[] }, window.CQRL_CONFIG || {});
+if (urlP.get('course')) CFG.course = urlP.get('course');
+if (urlP.get('institution')) CFG.institution = urlP.get('institution');
+if (urlP.get('method')) CFG.method = urlP.get('method');
+if (urlP.get('hide')) CFG.hide = urlP.get('hide').split(',');
+
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = (p='') => p + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+const now = () => new Date().toISOString();
+const find = (arr, id) => arr.find(x => x.id === id);
+const words = t => (t.match(/\S+/g) || []).length;
+const clip = (t, n) => t.length > n ? t.slice(0, n - 1) + '…' : t;
+const pct = x => Math.round(x * 100) + '%';
+const inkFor = hex => { const n = parseInt(safeColor(hex).slice(1), 16); const l = [n >> 16, (n >> 8) & 255, n & 255].map(v => { v /= 255; return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }); return (.2126 * l[0] + .7152 * l[1] + .0722 * l[2]) > .18 ? '#111' : '#fff'; };
+const safeColor = c => /^#[0-9a-f]{6}$/i.test(c || '') ? c : '#8d99ae';
+const rgba = (hex, a) => { hex = safeColor(hex); const n = parseInt(hex.slice(1), 16); return `rgba(${n>>16},${(n>>8)&255},${n&255},${a})`; };
+const escRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const PALETTE = ['#2a9d8f','#e76f51','#e9c46a','#457b9d','#9b5de5','#f15bb5','#00bbf9','#43aa8b','#ef476f','#f4a261','#3a86ff','#6a994e','#bc6c25','#d62828','#8d99ae','#ff9f1c'];
+const SRC_TYPES = ['Interview','Focus group','Observation','Document','Field notes','Survey response','Other'];
+const CODE_TYPES = ['Descriptive','In-vivo','Deductive (from theory)','Interpretive','Process','Pattern'];
+const RELATIONS = ['Supports','Contradicts','Extends','Explains (theory)','Identifies a gap','Contextualises'];
+const TRI_STATUS = ['Not reviewed','Convergent','Complementary','Divergent','Silent / absent'];
+const JOURNAL_TYPES = ['Reflexive note','Analytic memo','Methodological decision','Familiarisation note','Supervisor feedback'];
+
+/* Methodological pathways. Phases summarise widely published procedures; students should read the cited sources. */
+const METHODS = {
+  rta: { name:'Reflexive thematic analysis', ref:'Braun & Clarke (2006; 2021)',
+    note:'Coding is interpretive and theme development is active. Researcher subjectivity is a resource, so reflexive journaling matters more than inter-coder agreement scores.',
+    phases:[
+      ['Familiarise yourself with the data','Read and re-read every source. Note first impressions in the Journal.',['Read every source at least once','Write familiarisation notes']],
+      ['Generate initial codes','Code systematically across the whole dataset. Codes can be semantic (surface) or latent (underlying).',['Code every source','Write a definition for each code']],
+      ['Generate initial themes','Cluster codes into candidate themes built around a central organising concept.',['Group codes into candidate themes','Name each theme’s central organising concept']],
+      ['Develop and review themes','Check themes against coded excerpts and the whole dataset. Look for contradictions.',['Check each theme against its excerpts','Record negative cases']],
+      ['Refine, define and name themes','Write what each theme is about, and what it is not.',['Write a narrative for each theme','Link themes to literature']],
+      ['Write up','Weave analytic narrative, data extracts and literature into an argument.',['Draft each theme in Write-up','Describe your reflexive position']]],
+    prompts:{ code:'What meaning do you see here, beyond the surface words?', infer:'What might this suggest? Hold it loosely.', interp:'How does this help answer your research question?', tri:'Does other evidence support, complicate or contradict this?' } },
+  framework: { name:'Framework analysis', ref:'Ritchie & Spencer (1994); Gale et al. (2013)',
+    note:'A matrix-based approach suited to applied and policy research. Charting summaries by case and theme is central.',
+    phases:[
+      ['Transcription and familiarisation','Get to know the data and note recurring ideas.',['Read every source','Note initial ideas']],
+      ['Coding','Code a sample of sources inductively, deductively or both.',['Code 2–3 sources in depth']],
+      ['Develop an analytical framework','Agree a set of codes and themes to apply to the rest of the data.',['Define every code in the Codebook','Group codes into themes']],
+      ['Apply the framework (indexing)','Apply the framework to every source.',['Code all remaining sources']],
+      ['Chart the data into the matrix','Summarise each case by theme. Use Retrieve & matrix.',['Review the case-by-theme matrix','Export the matrix']],
+      ['Interpret the data','Compare across cases and themes, and explain patterns.',['Complete triangulation for each theme','Draft findings']]],
+    prompts:{ code:'Which framework category does this belong to?', infer:'What does this case show compared with others?', interp:'What pattern across cases does this contribute to?', tri:'How do other cases or groups compare?' } },
+  content: { name:'Qualitative content analysis', ref:'Hsieh & Shannon (2005); Mayring (2014)',
+    note:'Can be conventional (categories from data), directed (from theory) or summative (counting and interpreting). Clear category definitions are essential.',
+    phases:[
+      ['Define the research question and unit of analysis','Decide what counts as one codable unit.',['Write your research questions','Decide the unit of analysis']],
+      ['Develop categories','Inductively from data, or deductively from theory.',['Create categories with definitions','Add inclusion/exclusion rules']],
+      ['Code the material','Apply categories systematically.',['Code every source']],
+      ['Revise the category system','Merge, split or redefine categories after a first pass.',['Revise codebook','Record decisions in the Journal']],
+      ['Interpret results','Report categories with examples and, where appropriate, frequencies.',['Review the matrix','Draft findings']]],
+    prompts:{ code:'Which category definition does this meet?', infer:'What does this category tell you?', interp:'What does the pattern of categories mean?', tri:'Do frequencies and meanings agree across sources?' } },
+  gt: { name:'Grounded theory approach', ref:'Charmaz (2014); Corbin & Strauss (2015)',
+    note:'Analysis and data collection proceed together. Constant comparison and memo-writing drive theory-building.',
+    phases:[
+      ['Initial (open) coding','Code line by line, often with gerunds (actions).',['Code early sources line by line','Use in-vivo codes for participants’ terms']],
+      ['Focused coding','Select the most significant codes and test them across data.',['Choose focused codes','Merge or retire weak codes']],
+      ['Constant comparison','Compare excerpt with excerpt, code with code, case with case.',['Compare across participant groups in the matrix']],
+      ['Memo-writing','Write memos that develop categories and their properties.',['Write analytic memos in the Journal']],
+      ['Theoretical sampling and saturation','Seek data to develop categories until new data add little.',['Record sampling decisions','Note where categories are saturated']],
+      ['Theoretical integration','Relate categories into an explanatory theory.',['Use the Themes map to relate categories','Draft the theory']]],
+    prompts:{ code:'What is happening here? What process is this?', infer:'What property or dimension of a category does this show?', interp:'How does this category relate to others?', tri:'Where should you sample next to test this?' } },
+  narrative: { name:'Narrative analysis', ref:'Riessman (2008)',
+    note:'Keeps stories intact. Attends to what is told (thematic), how it is told (structural) and to whom/why (dialogic).',
+    phases:[
+      ['Read each story as a whole','Identify the storyline, turning points and characters.',['Summarise each participant’s story']],
+      ['Identify narrative segments','Code orientation, complicating action, evaluation and resolution, or your chosen structure.',['Code story structure']],
+      ['Analyse meaning and identity','How do participants position themselves and others?',['Note identity positioning in memos']],
+      ['Compare across narratives','Look for shared and contrasting story types.',['Compare stories in the matrix']],
+      ['Write up','Present stories with interpretation and context.',['Draft findings']]],
+    prompts:{ code:'What part of the story is this?', infer:'How is the narrator positioning themselves?', interp:'What does this story accomplish for the teller?', tri:'Do other stories echo or contest this one?' } },
+  ipa: { name:'Interpretative phenomenological analysis', ref:'Smith, Flowers & Larkin (2009; 2022)',
+    note:'Idiographic: analyse each case in depth before moving across cases. The researcher interprets the participant’s sense-making (the double hermeneutic).',
+    phases:[
+      ['Read and re-read','Immerse yourself in one case.',['Read the first case closely']],
+      ['Exploratory notes','Descriptive, linguistic and conceptual comments.',['Write exploratory notes as excerpt memos']],
+      ['Experiential statements','Turn notes into concise statements (codes).',['Create experiential statements']],
+      ['Personal experiential themes','Cluster statements for this case.',['Cluster into themes for the case']],
+      ['Repeat for each case','Treat each case on its own terms.',['Complete every case']],
+      ['Group experiential themes','Look for patterns across cases, keeping individual variation.',['Develop group-level themes','Draft findings']]],
+    prompts:{ code:'What does this experience mean to the participant?', infer:'How is the participant making sense of this?', interp:'How are you making sense of their sense-making?', tri:'How does this case compare with others, while staying idiographic?' } }
+};
+
+/* ============================================================
+   Storage (IndexedDB, local to this browser)
+   ============================================================ */
+const reqP = r => new Promise((res, rej) => { r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+const DB = {
+  db:null, ok:false,
+  async open(){
+    try {
+      this.db = await new Promise((res, rej) => {
+        const r = indexedDB.open('cqrl', 1);
+        r.onupgradeneeded = () => r.result.createObjectStore('projects', { keyPath:'id' });
+        r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+      });
+      this.ok = true;
+    } catch (e) { this.ok = false; }
+  },
+  store(m){ return this.db.transaction('projects', m).objectStore('projects'); },
+  async all(){ if (!this.ok) return []; try { return await reqP(this.store('readonly').getAll()); } catch(e){ return []; } },
+  async put(p){ if (!this.ok) return false; await reqP(this.store('readwrite').put(JSON.parse(JSON.stringify(p)))); return true; },
+  async del(id){ if (this.ok) await reqP(this.store('readwrite').delete(id)); }
+};
+const LS = { get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }, set(k,v){ try { localStorage.setItem(k,v); } catch(e){} } };
+
+/* ============================================================
+   State
+   ============================================================ */
+let P = null;          // current project
+let PROJECTS = [];     // all projects (meta + data)
+const S = { view:'guide', sourceId:null, segmentId:null, pending:null, srcQ:'', chipQ:'', jump:null, scrollSeg:false,
+  ex:{ tab:'retrieve', code:'', source:'', type:'', attr:'', neg:false, q:'', rows:'source', cols:'codes', sel:null, wq:'' },
+  tri:'', journalType:'' };
+
+function normalize(p){
+  const d = { schema:1, name:'Untitled project', created:now(), updated:now(), methodology: CFG.method || 'rta', description:'', researchQuestions:'',
+    positionality:'', sources:[], codes:[], themes:[], segments:[], literature:[], links:[], triangulation:{}, journal:[], writeup:{}, methods:'', steps:{}, attrKeys:['Group','Site'], log:[] };
+  for (const k in d) if (p[k] === undefined || p[k] === null) p[k] = d[k];
+  if (!METHODS[p.methodology]) p.methodology = 'rta';
+  p.sources.forEach(s => { s.attrs = s.attrs || {}; s.type = s.type || 'Interview'; s.text = String(s.text || ''); });
+  p.segments.forEach(s => { s.codeIds = s.codeIds || []; s.links = s.links || []; });
+  p.codes.forEach(c => { c.color = safeColor(c.color); });
+  p.themes.forEach(t => { t.color = safeColor(t.color); });
+  return p;
+}
+function blankProject(name){ return normalize({ id:uid('p'), name: name || 'Untitled project' }); }
+
+let saveTimer = null;
+function touch(){ if (!P) return; P.updated = now(); setStatus('Saving…'); clearTimeout(saveTimer); saveTimer = setTimeout(save, 500); }
+async function save(){
+  if (!P) return;
+  try { const ok = await DB.put(P); setStatus(ok ? 'Saved on this device' : 'Not saved: browser storage is blocked. Use Save backup.', !ok); }
+  catch (e) { setStatus('Save failed: ' + e.message + '. Use Save backup now.', true); }
+  LS.set('cqrl:last', P.id);
+  window.dispatchEvent(new CustomEvent('cqrl:save', { detail:{ id:P.id } }));
+}
+function setStatus(t, bad){ const el = $('#status'); el.textContent = t; el.className = 'status' + (bad ? ' bad' : ''); }
+function log(a, d){ P.log.push({ t:now(), a, d:String(d || '') }); if (P.log.length > 3000) P.log.splice(0, P.log.length - 3000); }
+function toast(msg){ const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.append(t); setTimeout(() => t.remove(), 2600); }
+
+/* ============================================================
+   Derived data
+   ============================================================ */
+function IX(){
+  const code = {}, theme = {}, src = {}, segBySrc = {}, segByCode = {};
+  P.codes.forEach(c => code[c.id] = c); P.themes.forEach(t => theme[t.id] = t); P.sources.forEach(s => { src[s.id] = s; segBySrc[s.id] = []; });
+  P.segments.forEach(s => { (segBySrc[s.sourceId] ||= []).push(s); s.codeIds.forEach(c => (segByCode[c] ||= []).push(s)); });
+  return { code, theme, src, segBySrc, segByCode };
+}
+function coverage(src, segs){
+  if (!src.text.length) return 0;
+  const r = segs.map(s => [s.start, s.end]).sort((a, b) => a[0] - b[0]);
+  let tot = 0, cs = -1, ce = -1;
+  for (const [a, b] of r) { if (a > ce) { tot += ce - cs; cs = a; ce = b; } else ce = Math.max(ce, b); }
+  tot += ce - cs; return tot / src.text.length;
+}
+const segThemes = (s, ix) => [...new Set(s.codeIds.map(c => ix.code[c] && ix.code[c].themeId).filter(Boolean))];
+const segsForTarget = (id, ix) => ix.theme[id] ? P.segments.filter(s => segThemes(s, ix).includes(id)) : (ix.segByCode[id] || []);
+const targetName = (id, ix) => (ix.theme[id] || ix.code[id] || {}).name || '(deleted)';
+function cite(l){
+  const names = String(l.authors || 'Unknown').split(/;|\band\b|&/).map(a => a.trim()).filter(Boolean).map(a => a.split(',')[0].trim());
+  const who = names.length > 2 ? names[0] + ' et al.' : names.join(' & ');
+  return `${who || 'Unknown'} (${l.year || 'n.d.'})`;
+}
+function apaRef(l){ return `${l.authors || 'Unknown'} (${l.year || 'n.d.'}). ${l.title || 'Untitled'}.${l.venue ? ' ' + l.venue + '.' : ''}${l.doi ? ' ' + (/^http/.test(l.doi) ? l.doi : 'https://doi.org/' + l.doi) : ''}`; }
+function segLabel(s, ix){ const src = ix.src[s.sourceId]; return src ? `${src.name}, ${src.type}` : 'Unknown source'; }
+
+/* ============================================================
+   Dialogs
+   ============================================================ */
+function fieldHtml(f){
+  const id = 'f_' + f.name;
+  if (f.type === 'info') return `<div class="hint" style="font-size:13px">${f.html}</div>`;
+  if (f.type === 'checkbox') return `<label class="row" style="margin-top:10px"><input type="checkbox" name="${f.name}" ${f.value ? 'checked' : ''}> ${esc(f.label)}</label>`;
+  let input;
+  if (f.type === 'textarea') input = `<textarea id="${id}" name="${f.name}" rows="${f.rows || 6}" placeholder="${esc(f.ph || '')}">${esc(f.value || '')}</textarea>`;
+  else if (f.type === 'select') input = `<select id="${id}" name="${f.name}">${f.options.map(o => { const [v, l] = Array.isArray(o) ? o : [o, o]; return `<option value="${esc(v)}" ${v == f.value ? 'selected' : ''}>${esc(l)}</option>`; }).join('')}</select>`;
+  else if (f.type === 'color') input = `<input type="color" id="${id}" name="${f.name}" value="${safeColor(f.value)}">`;
+  else input = `<input type="text" id="${id}" name="${f.name}" value="${esc(f.value || '')}" placeholder="${esc(f.ph || '')}">`;
+  return `<label class="f" for="${id}">${esc(f.label)}</label>${f.hint ? `<div class="hint">${esc(f.hint)}</div>` : ''}${input}`;
+}
+function ask(title, fields, okLabel = 'OK'){
+  return new Promise(res => {
+    const ov = document.createElement('div'); ov.className = 'ov';
+    ov.innerHTML = `<form class="dlg" role="dialog" aria-modal="true" aria-label="${esc(title)}"><h2>${esc(title)}</h2>${fields.map(fieldHtml).join('')}
+      <div class="row end" style="margin-top:16px"><button type="button" class="btn ghost" data-x>Cancel</button><button class="btn primary">${esc(okLabel)}</button></div></form>`;
+    document.body.append(ov);
+    const form = $('form', ov); const first = form.querySelector('input,textarea,select'); (first || $('button.primary', form)).focus();
+    const close = v => { ov.remove(); res(v); };
+    $('[data-x]', ov).onclick = () => close(null);
+    ov.addEventListener('keydown', e => { if (e.key === 'Escape') close(null); });
+    form.onsubmit = e => { e.preventDefault(); const out = {}; fields.forEach(f => { if (f.type === 'info') return; const el = form.elements[f.name]; out[f.name] = f.type === 'checkbox' ? el.checked : el.value; }); close(out); };
+  });
+}
+const confirmBox = async (msg, ok = 'Yes') => !!(await ask(msg, [], ok));
+
+/* ============================================================
+   Files: download, import (.txt .md .docx .csv .json .ris)
+   ============================================================ */
+function download(name, content, type = 'text/plain'){
+  const url = URL.createObjectURL(new Blob([content], { type: type + ';charset=utf-8' }));
+  const a = document.createElement('a'); a.href = url; a.download = name; document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+const fileSafe = s => String(s).replace(/[^\w\- ]+/g, '').trim().replace(/\s+/g, '-').slice(0, 60) || 'project';
+function pickFiles(accept, multiple = true){
+  return new Promise(res => { const inp = $('#fileIn'); inp.value = ''; inp.accept = accept; inp.multiple = multiple; inp.onchange = () => res([...inp.files]); inp.click(); });
+}
+function csvCell(v){ let s = String(v ?? ''); if (/^[=+\-@]/.test(s)) s = "'" + s; return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+const toCSV = rows => '﻿' + rows.map(r => r.map(csvCell).join(',')).join('\r\n');
+function parseCSV(text){
+  const rows = []; let row = [], cell = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) { if (c === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else q = false; } else cell += c; }
+    else if (c === '"') q = true;
+    else if (c === ',') { row.push(cell); cell = ''; }
+    else if (c === '\n' || c === '\r') { if (c === '\r' && text[i + 1] === '\n') i++; row.push(cell); rows.push(row); row = []; cell = ''; }
+    else cell += c;
+  }
+  if (cell || row.length) { row.push(cell); rows.push(row); }
+  return rows.filter(r => r.some(x => x.trim()));
+}
+async function readDocx(buf){
+  const dv = new DataView(buf); let eocd = -1;
+  for (let i = buf.byteLength - 22; i >= Math.max(0, buf.byteLength - 65557); i--) if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+  if (eocd < 0) throw new Error('not a valid .docx file');
+  const n = dv.getUint16(eocd + 10, true); let p = dv.getUint32(eocd + 16, true); const dec = new TextDecoder();
+  for (let k = 0; k < n; k++) {
+    if (dv.getUint32(p, true) !== 0x02014b50) break;
+    const method = dv.getUint16(p + 10, true), csize = dv.getUint32(p + 20, true), nlen = dv.getUint16(p + 28, true),
+      xlen = dv.getUint16(p + 30, true), clen = dv.getUint16(p + 32, true), lho = dv.getUint32(p + 42, true);
+    const name = dec.decode(new Uint8Array(buf, p + 46, nlen));
+    if (name === 'word/document.xml') {
+      const start = lho + 30 + dv.getUint16(lho + 26, true) + dv.getUint16(lho + 28, true);
+      const data = new Uint8Array(buf, start, csize); let xml;
+      if (method === 0) xml = dec.decode(data);
+      else if (method === 8) {
+        if (!('DecompressionStream' in window)) throw new Error('this browser cannot open .docx files. Save as .txt, or update your browser');
+        xml = await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text();
+      } else throw new Error('unsupported compression');
+      return docxText(xml);
+    }
+    p += 46 + nlen + xlen + clen;
+  }
+  throw new Error('no document text found');
+}
+function docxText(xml){
+  const W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+  const doc = new DOMParser().parseFromString(xml, 'application/xml'); const out = [];
+  for (const p of doc.getElementsByTagNameNS(W, 'p')) {
+    let t = '';
+    for (const el of p.getElementsByTagNameNS(W, '*')) {
+      if (el.localName === 't') t += el.textContent; else if (el.localName === 'tab') t += '\t'; else if (el.localName === 'br' || el.localName === 'cr') t += '\n';
+    }
+    out.push(t);
+  }
+  return out.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+}
+function wordDoc(title, body){
+  return '﻿' + `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>${esc(title)}</title>
+<style>body{font-family:Calibri,Arial,sans-serif;font-size:11pt;line-height:1.5}h1{font-size:18pt}h2{font-size:14pt;margin-top:18pt}h3{font-size:12pt}blockquote{margin:6pt 0 6pt 24pt;font-style:italic}table{border-collapse:collapse}td,th{border:1px solid #999;padding:4pt;font-size:9pt;vertical-align:top}.m{color:#555;font-size:9pt}</style></head><body>${body}
+<p class="m">Prepared with the ${APP.name} (${APP.edition} ${APP.version}), created by ${APP.author}. Software © 2026 ${APP.author}. The analysis and interpretations are the researcher’s own.</p></body></html>`;
+}
+
+/* ============================================================
+   Rendering shell
+   ============================================================ */
+const VIEWS = [
+  ['guide','Guide & progress','★','sea'], ['sources','Sources','1','ocean'], ['code','Code','2','hibiscus'], ['codebook','Codebook','2','hibiscus'], ['literature','Literature','3','palm'],
+  ['themes','Themes & map','4·5','bougain'], ['triangulate','Triangulation','6','sunset'], ['explore','Retrieve & matrix','◎','indigo'], ['journal','Journal','✎','mahogany'],
+  ['write','Write-up','7','mango'], ['export','Export','↓','ocean'], ['about','About & licence','©','night']
+];
+const secOf = v => (VIEWS.find(x => x[0] === v) || [])[3] || 'sea';
+function renderNav(){
+  const vis = VIEWS.filter(v => !CFG.hide.includes(v[0]));
+  $('#nav').innerHTML = `<div class="cap">Research journey</div>` + vis.map(([id, label, n], i) =>
+    (id === 'explore' ? '<hr><div class="cap">Tools</div>' : '') +
+    `<button class="${S.view === id ? 'on' : ''}" style="--sc:var(--b-${secOf(id)})" data-act="go" data-v="${id}" ${S.view === id ? 'aria-current="page"' : ''}><span class="n" aria-hidden="true">${n || '•'}</span>${label}</button>`).join('')
+    + `<hr><div class="cap" style="text-transform:none;letter-spacing:0;font-weight:500;color:#e6eef8;line-height:1.4">Created by<br><b style="color:#ffd96a">${APP.author}</b></div>`;
+}
+function renderProjSel(){
+  $('#projSel').innerHTML = PROJECTS.map(p => `<option value="${p.id}" ${p.id === P.id ? 'selected' : ''}>${esc(clip(p.name, 40))}</option>`).join('') + '<option value="__manage">Manage projects…</option>';
+}
+function render(){
+  if (!P) return;
+  const keep = window.scrollY;
+  renderNav(); renderProjSel();
+  const fn = V[S.view] || V.guide;
+  $('#main').style.setProperty('--sec', `var(--c-${secOf(S.view)})`);
+  $('#main').innerHTML = fn() + footer();
+  if (S.view === 'code') afterCode();
+  if (S.view === 'themes') afterThemes();
+  if (S.view !== 'code') window.scrollTo(0, keep);
+}
+function go(v){ S.view = v; S.ex.sel = null; render(); window.scrollTo(0, 0); }
+
+const footer = () => `<footer class="foot" role="contentinfo"><b>© 2026 ${APP.author}. All rights reserved.</b> The ${APP.name}™, its seven-stage analytical journey, analytical-defence method, Caribbean design, guidance, practice study and documentation are original creative works of ${APP.author}.<br>Community Edition licensed under ${APP.license}, with the attribution “Created by ${APP.author}” required in every copy. Commercial licences are available. <a href="#" data-act="go" data-v="about">Licence and creative rights</a></footer>`;
+const journey = () => `<div class="journey" aria-label="Analytical journey">${[['sources','Evidence','ocean'],['code','Coding','hibiscus'],['literature','Literature','palm'],['code','Inference','mango'],['themes','Interpretation','bougain'],['triangulate','Triangulation','sunset'],['write','Write-up','indigo']].map(([v, l, c], i) => `${i ? '<span aria-hidden="true">➜</span>' : ''}<button style="--jc:var(--c-${c})" data-act="go" data-v="${v}">${i + 1}. ${l}</button>`).join('')}</div>`;
+
+/* ============================================================
+   Views
+   ============================================================ */
+const V = {};
+
+V.guide = () => {
+  const m = METHODS[P.methodology]; const ix = IX();
+  const coded = P.sources.length ? P.sources.reduce((a, s) => a + coverage(s, ix.segBySrc[s.id] || []), 0) / P.sources.length : 0;
+  const defd = P.codes.filter(c => (c.description || '').trim()).length;
+  const interp = P.segments.filter(s => (s.inference || s.interpretation || '').trim()).length;
+  const narr = P.themes.filter(t => (t.narrative || '').trim()).length;
+  const tri = P.themes.filter(t => { const r = P.triangulation[t.id]; return r && Object.values(r.rows || {}).some(x => x.status && x.status !== 'Not reviewed'); }).length;
+  const wr = P.themes.filter(t => ((P.writeup[t.id] || {}).finding || '').trim()).length;
+  const metric = (l, v, frac) => `<div class="metric"><span>${l}</span><b>${v}</b></div><div class="bar"><i style="width:${Math.min(100, Math.round(frac * 100))}%"></i></div>`;
+  const fr = (a, b) => b ? a / b : 0;
+  const steps = m.phases.map((ph, i) => `<div style="margin-top:12px"><b>Phase ${i + 1}. ${esc(ph[0])}</b><div class="hint">${esc(ph[1])}</div>${ph[2].map((t, j) => { const k = P.methodology + ':' + i + ':' + j; return `<label class="row" style="font-size:13px"><input type="checkbox" data-step="${k}" ${P.steps[k] ? 'checked' : ''}> ${esc(t)}</label>`; }).join('')}</div>`).join('');
+  return `<h1>${esc(P.name)}</h1>
+  <p class="lead">Move from what participants said to a defensible finding: code the evidence, connect it to literature, infer, interpret, triangulate, then write up. Everything stays on this device. No AI is used and nothing is uploaded.</p>
+  ${journey()}
+  ${!P.sources.length ? `<div class="card" style="margin-bottom:14px"><b>New here?</b> Load a short fictional practice study (teachers and classroom technology in the Caribbean) to learn the workflow, or go to <a href="#" data-act="go" data-v="sources">Sources</a> to add your own transcripts.<div class="row" style="margin-top:8px"><button class="btn primary" data-act="loadSample">Load practice study</button></div></div>` : ''}
+  <div class="grid2">
+    <div class="card">
+      <h2 style="margin-top:0">Your study</h2>
+      <label class="f" for="pn">Project name</label><input id="pn" data-bind="project||name" data-rr="nav" value="${esc(P.name)}">
+      <label class="f" for="rq">Research question(s)</label><div class="hint">Every interpretation you write should help answer these.</div>
+      <textarea id="rq" data-bind="project||researchQuestions" rows="3">${esc(P.researchQuestions)}</textarea>
+      <label class="f" for="pd">Context and participants</label><textarea id="pd" data-bind="project||description" rows="3" placeholder="Setting, sampling, number of participants, ethics approval…">${esc(P.description)}</textarea>
+      <label class="f" for="pp">Researcher positionality</label><div class="hint">What do you bring to this study (experience, assumptions, insider/outsider status)?</div>
+      <textarea id="pp" data-bind="project||positionality" rows="3">${esc(P.positionality)}</textarea>
+      <label class="f" for="meth">Analytical approach</label>
+      <select id="meth" data-bind="project||methodology" data-rr="1" ${CFG.method && urlP.get('lock') ? 'disabled' : ''}>${Object.entries(METHODS).map(([k, v]) => `<option value="${k}" ${k === P.methodology ? 'selected' : ''}>${v.name}</option>`).join('')}</select>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">Progress</h2>
+      ${metric('Sources', P.sources.length, Math.min(1, P.sources.length / 5))}
+      ${metric('Text coded (average across sources)', pct(coded), coded)}
+      ${metric('Codes with a definition', `${defd} / ${P.codes.length}`, fr(defd, P.codes.length))}
+      ${metric('Excerpts with an inference or interpretation', `${interp} / ${P.segments.length}`, fr(interp, P.segments.length))}
+      ${metric('Literature connections', P.links.length, Math.min(1, P.links.length / Math.max(3, P.themes.length * 2)))}
+      ${metric('Themes with a narrative', `${narr} / ${P.themes.length}`, fr(narr, P.themes.length))}
+      ${metric('Themes triangulated', `${tri} / ${P.themes.length}`, fr(tri, P.themes.length))}
+      ${metric('Themes written up', `${wr} / ${P.themes.length}`, fr(wr, P.themes.length))}
+      ${metric('Journal entries', P.journal.length, Math.min(1, P.journal.length / 5))}
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px"><h2 style="margin-top:0">${esc(m.name)} <span class="pill">${esc(m.ref)}</span></h2>
+    <p class="hint" style="font-size:13px">${esc(m.note)}</p>${steps}
+    <p class="hint" style="margin-top:14px">These phases are a scaffold, not a recipe. Read the original sources and follow your supervisor’s guidance.</p></div>`;
+};
+
+V.sources = () => {
+  const ix = IX();
+  const rows = P.sources.map(s => { const cov = coverage(s, ix.segBySrc[s.id] || []); return `<tr>
+    <td><input data-bind="sources|${s.id}|name" value="${esc(s.name)}" aria-label="Source name"></td>
+    <td><select data-bind="sources|${s.id}|type" aria-label="Source type">${SRC_TYPES.map(t => `<option ${t === s.type ? 'selected' : ''}>${t}</option>`).join('')}</select></td>
+    ${P.attrKeys.map(k => `<td><input data-bind="sources|${s.id}|attrs.${esc(k)}" value="${esc(s.attrs[k] || '')}" aria-label="${esc(k)}"></td>`).join('')}
+    <td>${words(s.text).toLocaleString()}</td><td style="min-width:80px">${pct(cov)}<div class="bar"><i style="width:${pct(cov)}"></i></div></td>
+    <td class="row" style="flex-wrap:nowrap"><button class="btn sm" data-act="openSource" data-id="${s.id}">Code</button><button class="btn sm danger" data-act="delSource" data-id="${s.id}" aria-label="Delete ${esc(s.name)}">Delete</button></td></tr>`; }).join('');
+  return `<h1>1. Sources (evidence)</h1>
+  <p class="lead">Add interview transcripts, focus groups, observation notes, documents or open-ended survey responses. Import .txt, .docx or .csv files (one row per response), or paste text. Remove or replace identifying details before you code.</p>
+  <div class="row" style="margin-bottom:12px"><button class="btn primary" data-act="importSources">Import files</button><button class="btn" data-act="pasteSource">Paste text</button>
+  <button class="btn" data-act="pseudonymise">Pseudonymise names…</button><button class="btn" data-act="attrKeys">Participant attributes…</button>
+  <span class="muted">${P.sources.length} source${P.sources.length === 1 ? '' : 's'} · ${P.sources.reduce((a, s) => a + words(s.text), 0).toLocaleString()} words</span></div>
+  ${P.sources.length ? `<div class="card scroll"><table class="t"><thead><tr><th>Name / pseudonym</th><th>Type</th>${P.attrKeys.map(k => `<th>${esc(k)}</th>`).join('')}<th>Words</th><th>Coded</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>` : `<div class="card empty">No sources yet. Import files or paste a transcript to begin.</div>`}
+  <p class="hint" style="margin-top:10px">Attributes (for example Group, Site, Gender, Years of experience) let you compare perspectives in the matrix and triangulation views. Pseudonymisation is not anonymisation: context can still identify people.</p>`;
+};
+
+/* ---------- Coding workspace ---------- */
+V.code = () => {
+  if (!P.sources.length) return `<h1>2. Code</h1><div class="card empty">Add a source first. <button class="btn primary" data-act="go" data-v="sources">Go to Sources</button></div>`;
+  if (!find(P.sources, S.sourceId)) S.sourceId = P.sources[0].id;
+  const src = find(P.sources, S.sourceId);
+  return `<div class="ws">
+    <div class="pane"><div class="hd"><input type="search" id="srcQ" placeholder="Find a source…" value="${esc(S.srcQ)}" aria-label="Filter sources"></div><div class="bd" id="srcList"></div></div>
+    <div class="pane"><div class="hd"><div class="row"><b>${esc(src.name)}</b><span class="pill">${esc(src.type)}</span>${Object.entries(src.attrs).filter(e => e[1]).map(([k, v]) => `<span class="pill">${esc(k)}: ${esc(v)}</span>`).join('')}</div>
+      <div class="hint">Select words with the mouse (or press and hold on a tablet), then choose a code. Click a highlight to analyse it.</div></div>
+      <div class="bd"><div class="transcript" id="tx"></div></div></div>
+    <div class="pane"><div class="bd" id="side"></div></div>
+  </div>`;
+};
+function renderSrcList(){
+  const ix = IX(); const q = S.srcQ.toLowerCase();
+  const el = $('#srcList'); if (!el) return;
+  el.innerHTML = P.sources.filter(s => !q || (s.name + ' ' + s.type + ' ' + Object.values(s.attrs).join(' ')).toLowerCase().includes(q)).map(s => { const c = coverage(s, ix.segBySrc[s.id] || []);
+    return `<button class="srcitem ${s.id === S.sourceId ? 'on' : ''}" data-act="openSource" data-id="${s.id}"><div>${esc(clip(s.name, 34))}</div><div class="hint" style="margin:0">${esc(s.type)} · ${(ix.segBySrc[s.id] || []).length} excerpts · ${pct(c)}</div><div class="bar"><i style="width:${pct(c)}"></i></div></button>`; }).join('') || '<p class="muted">No match.</p>';
+}
+function renderTx(){
+  const el = $('#tx'); if (!el) return;
+  const src = find(P.sources, S.sourceId); const ix = IX(); const segs = ix.segBySrc[src.id] || [];
+  const pts = new Set([0, src.text.length]); segs.forEach(s => { pts.add(s.start); pts.add(s.end); });
+  const arr = [...pts].sort((a, b) => a - b); let html = '';
+  for (let i = 0; i < arr.length - 1; i++) {
+    const a = arr[i], b = arr[i + 1]; if (a === b) continue;
+    const piece = esc(src.text.slice(a, b)); const cover = segs.filter(s => s.start <= a && s.end >= b);
+    if (!cover.length) { html += piece; continue; }
+    const cols = [...new Set(cover.flatMap(s => s.codeIds.map(c => ix.code[c] && ix.code[c].color).filter(Boolean)))];
+    if (!cols.length) cols.push('#8d99ae');
+    const bg = cols.length === 1 ? rgba(cols[0], .38) : `linear-gradient(to bottom,${cols.map((c, k) => `${rgba(c, .45)} ${k / cols.length * 100}% ${(k + 1) / cols.length * 100}%`).join(',')})`;
+    const names = [...new Set(cover.flatMap(s => s.codeIds.map(c => ix.code[c] && ix.code[c].name).filter(Boolean)))].join(', ');
+    const on = cover.some(s => s.id === S.segmentId);
+    html += `<mark class="hl${on ? ' on' : ''}" data-segs="${cover.map(s => s.id).join(',')}" style="background:${bg}" title="${esc(names)}">${piece}</mark>`;
+  }
+  el.innerHTML = html;
+}
+function chipsHtml(activeIds, withKeys){
+  const ix = IX(); const q = S.chipQ.toLowerCase();
+  const groups = [...P.themes.map(t => [t, P.codes.filter(c => c.themeId === t.id)]), [null, P.codes.filter(c => !c.themeId || !ix.theme[c.themeId])]];
+  let k = 0;
+  return groups.filter(g => g[1].length).map(([t, cs]) => {
+    const list = cs.filter(c => !q || c.name.toLowerCase().includes(q));
+    if (!list.length) return '';
+    return `<div class="hint" style="margin-top:6px">${t ? esc(t.name) : (P.themes.length ? 'Not yet in a theme' : 'Codes')}</div>` + list.map(c => { k++;
+      return `<button class="chip ${activeIds.includes(c.id) ? 'on' : ''}" data-act="chip" data-code="${c.id}" style="--c:${safeColor(c.color)};--t:${inkFor(c.color)}" aria-pressed="${activeIds.includes(c.id)}"><i></i>${esc(c.name)}${withKeys && k < 10 ? ` <kbd>${k}</kbd>` : ''}</button>`; }).join('');
+  }).join('') || '<p class="muted">No codes match. Press Enter to create it.</p>';
+}
+function orderedCodes(){ const ix = IX(); return [...P.themes.flatMap(t => P.codes.filter(c => c.themeId === t.id)), ...P.codes.filter(c => !c.themeId || !ix.theme[c.themeId])]; }
+function renderSide(){
+  const el = $('#side'); if (!el) return;
+  const m = METHODS[P.methodology]; const ix = IX();
+  const codeInput = `<input type="search" id="chipQ" placeholder="Find or create a code (Enter)…" value="${esc(S.chipQ)}" aria-label="Find or create a code"><div id="chips" style="margin-top:4px">`;
+  if (S.pending) {
+    const src = find(P.sources, S.sourceId); const t = src.text.slice(S.pending.start, S.pending.end);
+    el.innerHTML = `<h3 style="margin-top:0">Code this passage</h3><blockquote>${esc(clip(t, 400))}</blockquote>
+      <div class="hint">${esc(m.prompts.code)}</div>${codeInput}${chipsHtml([], true)}</div>
+      <div class="row" style="margin-top:10px"><button class="btn" data-act="invivo" title="Use the participant's own words as the code name">In-vivo code</button><button class="btn" data-act="newCodeDlg">New code…</button><button class="btn ghost" data-act="clearSel">Cancel</button></div>
+      <p class="hint" style="margin-top:12px">Shortcut: press 1–9 to apply a numbered code. You can apply several codes to one passage.</p>`;
+    return;
+  }
+  const seg = find(P.segments, S.segmentId);
+  if (!seg) {
+    const segs = ix.segBySrc[S.sourceId] || [];
+    el.innerHTML = `<h3 style="margin-top:0">How to code</h3><ol style="padding-left:18px;margin:0">
+      <li>Select a passage in the transcript.</li><li>Click a code, type a new one, or make an in-vivo code from the participant’s words.</li>
+      <li>Then work through the six columns: why this code, literature, inference, interpretation and triangulation.</li></ol>
+      <h3>This source</h3><p class="muted">${segs.length} coded excerpt${segs.length === 1 ? '' : 's'}.</p>
+      ${segs.length ? `<button class="btn" data-act="segStep" data-d="0">Open the first excerpt</button>` : ''}
+      <h3>Codebook</h3>${P.codes.length ? P.codes.map(c => `<span class="chip" style="--c:${safeColor(c.color)};cursor:default"><i></i>${esc(c.name)} <kbd>${(ix.segByCode[c.id] || []).length}</kbd></span>`).join('') : '<p class="muted">No codes yet.</p>'}`;
+    return;
+  }
+  const segs = (ix.segBySrc[seg.sourceId] || []).slice().sort((a, b) => a.start - b.start); const pos = segs.indexOf(seg);
+  const links = P.links.filter(l => l.targetType === 'segment' && l.targetId === seg.id);
+  const field = (n, key, label, prompt, rows = 3) => `<div class="step"><span class="no">${n}</span><div><label class="f" for="sf_${key}" style="margin-top:6px">${label}</label><div class="hint">${esc(prompt)}</div><textarea id="sf_${key}" data-bind="segments|${seg.id}|${key}" rows="${rows}">${esc(seg[key] || '')}</textarea></div></div>`;
+  el.innerHTML = `<div class="row" style="justify-content:space-between"><b>Excerpt ${pos + 1} of ${segs.length}</b><span class="row"><button class="btn sm" data-act="segStep" data-d="-1" ${pos <= 0 ? 'disabled' : ''} aria-label="Previous excerpt">‹</button><button class="btn sm" data-act="segStep" data-d="1" ${pos >= segs.length - 1 ? 'disabled' : ''} aria-label="Next excerpt">›</button><button class="btn sm ghost" data-act="closeSeg" aria-label="Close">✕</button></span></div>
+    <div class="step"><span class="no">1</span><div><b>Evidence</b><blockquote>${esc(seg.text)}</blockquote><div class="hint">${esc(segLabel(seg, ix))} · characters ${seg.start}–${seg.end}. The participant’s words are never changed.</div></div></div>
+    <div class="step"><span class="no">2</span><div><b>Codes</b><div class="hint">${esc(m.prompts.code)}</div>${codeInput}${chipsHtml(seg.codeIds, false)}</div>
+      <label class="f" for="sf_rationale">Why do these codes fit? (analytical defence)</label><textarea id="sf_rationale" data-bind="segments|${seg.id}|rationale" rows="2">${esc(seg.rationale || '')}</textarea></div></div>
+    <div class="step"><span class="no">3</span><div><b>Literature connection</b><div class="hint">Which source you have read supports, challenges or explains this?</div>
+      ${links.map(l => { const lit = find(P.literature, l.litId); return `<div class="row" style="justify-content:space-between;margin:4px 0"><span><span class="pill">${esc(l.relation)}</span> ${esc(lit ? cite(lit) : '(deleted)')} ${l.note ? '— ' + esc(clip(l.note, 80)) : ''}</span><button class="btn sm ghost" data-act="delLink" data-id="${l.id}" aria-label="Remove link">✕</button></div>`; }).join('')}
+      <button class="btn sm" data-act="addLink" data-tt="segment" data-tid="${seg.id}">+ Connect a reference</button></div></div>
+    ${field(4, 'inference', 'Inference', m.prompts.infer + ' What remains uncertain?')}
+    ${field(5, 'interpretation', 'Interpretation', m.prompts.interp)}
+    ${field(6, 'triangulation', 'Triangulation', m.prompts.tri)}
+    <details style="margin-top:12px"><summary>Language, context and memo</summary>
+      <label class="f" for="sf_lang">Language and context note</label><div class="hint">For Jamaican Creole or other Caribbean language varieties: keep the participant’s words and add your gloss or cultural context here. Never rewrite their words into Standard English.</div>
+      <textarea id="sf_lang" data-bind="segments|${seg.id}|languageNote" rows="2">${esc(seg.languageNote || '')}</textarea>
+      <label class="f" for="sf_memo">Memo</label><textarea id="sf_memo" data-bind="segments|${seg.id}|memo" rows="2">${esc(seg.memo || '')}</textarea></details>
+    <label class="row" style="margin-top:12px"><input type="checkbox" data-bind="segments|${seg.id}|negative" ${seg.negative ? 'checked' : ''}> Negative case: this contradicts or complicates a pattern</label>
+    <div class="row" style="margin-top:14px"><button class="btn danger" data-act="delSeg" data-id="${seg.id}">Delete excerpt</button></div>`;
+}
+function afterCode(){
+  renderSrcList(); renderTx(); renderSide();
+  if (S.jump) { const j = S.jump; S.jump = null; selectRange($('#tx'), j.start, j.end); S.pending = { start:j.start, end:j.end }; renderSide(); }
+  if (S.scrollSeg) { S.scrollSeg = false; const mk = $('#tx mark.on'); mk && mk.scrollIntoView({ block:'center' }); }
+}
+function textOffsets(container){
+  const sel = getSelection(); if (!sel.rangeCount || sel.isCollapsed) return null;
+  const r = sel.getRangeAt(0); if (!container.contains(r.startContainer) || !container.contains(r.endContainer)) return null;
+  const pre = document.createRange(); pre.selectNodeContents(container); pre.setEnd(r.startContainer, r.startOffset);
+  let start = pre.toString().length, end = start + r.toString().length;
+  const text = find(P.sources, S.sourceId).text;
+  while (start < end && /\s/.test(text[start])) start++;
+  while (end > start && /\s/.test(text[end - 1])) end--;
+  return end > start ? { start, end } : null;
+}
+function selectRange(container, start, end){
+  const w = document.createTreeWalker(container, NodeFilter.SHOW_TEXT); let pos = 0, n, r = document.createRange(), sN, eN;
+  while ((n = w.nextNode())) { const L = n.nodeValue.length;
+    if (!sN && start <= pos + L) { r.setStart(n, start - pos); sN = n; }
+    if (sN && end <= pos + L) { r.setEnd(n, end - pos); eN = n; break; }
+    pos += L; }
+  if (sN && eN) { const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); (sN.parentElement || container).scrollIntoView({ block:'center' }); }
+}
+let selTimer;
+document.addEventListener('selectionchange', () => {
+  if (S.view !== 'code') return; clearTimeout(selTimer);
+  selTimer = setTimeout(() => { const tx = $('#tx'); if (!tx) return; const o = textOffsets(tx);
+    if (o && (!S.pending || o.start !== S.pending.start || o.end !== S.pending.end)) { S.pending = o; S.chipQ = ''; renderSide(); } }, 250);
+});
+function applyCode(codeId){
+  const ix = IX();
+  if (S.pending) {
+    const src = find(P.sources, S.sourceId);
+    const same = (ix.segBySrc[src.id] || []).find(s => s.start === S.pending.start && s.end === S.pending.end);
+    if (same) { if (!same.codeIds.includes(codeId)) same.codeIds.push(codeId); S.segmentId = same.id; }
+    else { const s = { id:uid('s'), sourceId:src.id, start:S.pending.start, end:S.pending.end, text:src.text.slice(S.pending.start, S.pending.end), codeIds:[codeId], created:now() };
+      P.segments.push(s); S.segmentId = s.id; log('Coded excerpt', `${src.name}: "${clip(s.text, 60)}" → ${ix.code[codeId].name}`); }
+    S.pending = null; getSelection().removeAllRanges();
+  } else {
+    const seg = find(P.segments, S.segmentId); if (!seg) return;
+    const i = seg.codeIds.indexOf(codeId); if (i >= 0) seg.codeIds.splice(i, 1); else seg.codeIds.push(codeId);
+  }
+  S.chipQ = ''; touch(); renderTx(); renderSide(); renderSrcList();
+}
+function createCode(name, extra = {}){
+  name = name.trim(); if (!name) return null;
+  const ex = P.codes.find(c => c.name.toLowerCase() === name.toLowerCase()); if (ex) return ex;
+  const c = Object.assign({ id:uid('c'), name, color:PALETTE[P.codes.length % PALETTE.length], description:'', include:'', exclude:'', type:'Descriptive', themeId:'', created:now() }, extra);
+  P.codes.push(c); log('Created code', name); touch(); return c;
+}
+
+/* ---------- Codebook ---------- */
+V.codebook = () => {
+  const ix = IX();
+  const codeCard = c => { const segs = ix.segByCode[c.id] || []; const nsrc = new Set(segs.map(s => s.sourceId)).size;
+    return `<div class="card" style="border-left:6px solid ${safeColor(c.color)};padding:10px 12px;margin-bottom:8px">
+      <div class="row"><input type="color" data-bind="codes|${c.id}|color" data-rr="1" value="${safeColor(c.color)}" aria-label="Colour for ${esc(c.name)}">
+      <input data-bind="codes|${c.id}|name" value="${esc(c.name)}" style="flex:1;min-width:160px;font-weight:600" aria-label="Code name">
+      <select data-bind="codes|${c.id}|themeId" data-rr="1" style="width:auto" aria-label="Theme"><option value="">— no theme —</option>${P.themes.map(t => `<option value="${t.id}" ${t.id === c.themeId ? 'selected' : ''}>${esc(t.name)}</option>`).join('')}</select>
+      <span class="pill">${segs.length} excerpts · ${nsrc} sources</span>
+      <button class="btn sm" data-act="retrieve" data-id="${c.id}">Retrieve</button><button class="btn sm" data-act="mergeCode" data-id="${c.id}">Merge into…</button><button class="btn sm danger" data-act="delCode" data-id="${c.id}">Delete</button></div>
+      <details style="margin-top:6px"><summary style="font-weight:500;font-size:13px">Definition, rules and type${(c.description || '').trim() ? '' : ' <span class="pill" style="color:var(--warn)">needs a definition</span>'}</summary>
+      <div class="grid2" style="gap:8px"><div><label class="f">Definition</label><textarea data-bind="codes|${c.id}|description" rows="2">${esc(c.description)}</textarea></div>
+      <div><label class="f">Type</label><select data-bind="codes|${c.id}|type">${CODE_TYPES.map(t => `<option ${t === c.type ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
+      <div><label class="f">Use when (inclusion)</label><textarea data-bind="codes|${c.id}|include" rows="2">${esc(c.include)}</textarea></div>
+      <div><label class="f">Do not use when (exclusion)</label><textarea data-bind="codes|${c.id}|exclude" rows="2">${esc(c.exclude)}</textarea></div></div></details></div>`; };
+  const groups = [...P.themes.map(t => [t, P.codes.filter(c => c.themeId === t.id)]), [null, P.codes.filter(c => !c.themeId || !ix.theme[c.themeId])]];
+  return `<h1>2. Codebook</h1><p class="lead">Define each code so that you (or another reader) would apply it consistently. Rename, recolour, merge or regroup codes as your understanding develops. Every change is recorded in the decision trail.</p>
+    <div class="row" style="margin-bottom:12px"><button class="btn primary" data-act="newCodeDlg">New code</button><button class="btn" data-act="newTheme">New theme</button><button class="btn" data-act="exportCodebook">Export codebook (Word)</button><span class="muted">${P.codes.length} codes · ${P.themes.length} themes</span></div>
+    ${P.codes.length ? groups.filter(g => g[1].length || g[0]).map(([t, cs]) => `<h2>${t ? `<span style="color:${safeColor(t.color)}">●</span> ${esc(t.name)}` : 'Not yet in a theme'} <span class="pill">${cs.length}</span></h2>${cs.map(codeCard).join('') || '<p class="muted">No codes in this theme yet.</p>'}`).join('') : '<div class="card empty">No codes yet. Create codes here, or while coding a transcript.</div>'}`;
+};
+
+/* ---------- Themes & map ---------- */
+V.themes = () => {
+  const ix = IX(); const m = METHODS[P.methodology];
+  const chip = c => `<span class="chip" draggable="true" data-drag="${c.id}" style="--c:${safeColor(c.color)}"><i></i>${esc(c.name)} <kbd>${(ix.segByCode[c.id] || []).length}</kbd></span>`;
+  const unassigned = P.codes.filter(c => !c.themeId || !ix.theme[c.themeId]);
+  const cards = P.themes.map(t => { const segs = segsForTarget(t.id, ix); const neg = segs.filter(s => s.negative).length; const nsrc = new Set(segs.map(s => s.sourceId)).size;
+    return `<div class="card theme-card" style="--c:${safeColor(t.color)}">
+      <div class="row"><input type="color" data-bind="themes|${t.id}|color" data-rr="1" value="${safeColor(t.color)}" aria-label="Theme colour"><input data-bind="themes|${t.id}|name" value="${esc(t.name)}" style="flex:1;font-weight:700" aria-label="Theme name"></div>
+      <div class="row" style="margin-top:6px"><span class="pill">${segs.length} excerpts</span><span class="pill">${nsrc} sources</span><span class="pill" style="${neg ? 'color:var(--accent)' : ''}">${neg} negative cases</span>
+      <select data-bind="themes|${t.id}|status" style="width:auto;font-size:12px" aria-label="Theme status">${['Candidate','Reviewed','Final'].map(s => `<option ${s === (t.status || 'Candidate') ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
+      <div class="drop" data-drop="${t.id}" aria-label="Codes in ${esc(t.name)}">${P.codes.filter(c => c.themeId === t.id).map(chip).join('') || '<span class="hint">Drag codes here</span>'}</div>
+      <label class="f">Central organising concept</label><div class="hint">What unifying meaning connects these codes?</div><textarea data-bind="themes|${t.id}|concept" rows="2">${esc(t.concept || '')}</textarea>
+      <label class="f">Theme narrative</label><div class="hint">What is this theme about, and what is it not? Which excerpts challenge it?</div><textarea data-bind="themes|${t.id}|narrative" rows="4">${esc(t.narrative || '')}</textarea>
+      <div class="row" style="margin-top:8px"><button class="btn sm" data-act="retrieve" data-id="${t.id}">Evidence</button><button class="btn sm" data-act="addLink" data-tt="theme" data-tid="${t.id}">+ Literature</button><button class="btn sm" data-act="goTri" data-id="${t.id}">Triangulate</button><button class="btn sm danger" data-act="delTheme" data-id="${t.id}">Delete</button></div></div>`; }).join('');
+  return `<h1>4–5. Themes and thematic map</h1><p class="lead">${esc(m.name)}: group codes into themes by dragging, then write what each theme means. Three similar codes do not automatically make a theme. You decide, and you defend that decision.</p>
+    <div class="row" style="margin-bottom:12px"><button class="btn primary" data-act="newTheme">New theme</button><button class="btn" data-act="mapSvg">Download map (SVG)</button></div>
+    <div class="card" style="margin-bottom:12px"><b>Codes not yet in a theme</b><div class="drop" data-drop="">${unassigned.map(chip).join('') || '<span class="hint">All codes are in themes.</span>'}</div><div class="hint">On a touch screen, use the theme menu on each code in the Codebook.</div></div>
+    <div class="board">${cards || '<div class="card empty">Create your first candidate theme.</div>'}</div>
+    <h2>Thematic map</h2><p class="hint">Codes (left) build themes (centre). Literature (right) connects to codes and themes. Green = supports, red = contradicts, grey = other. Click a node to see its evidence.</p>
+    <div class="card scroll" id="mapBox">${mapSvg()}</div>`;
+};
+function mapSvg(){
+  const ix = IX();
+  const codes = orderedCodes(); const themes = P.themes;
+  const litIds = [...new Set(P.links.filter(l => l.targetType !== 'segment').map(l => l.litId))];
+  const lits = litIds.map(id => find(P.literature, id)).filter(Boolean);
+  const RH = 30, W = 940, n = Math.max(codes.length, themes.length, lits.length, 1), H = n * RH + 40;
+  const y = (i, len) => 30 + (H - 40) / Math.max(len, 1) * (i + .5);
+  const pos = {}; codes.forEach((c, i) => pos[c.id] = [180, y(i, codes.length)]); themes.forEach((t, i) => pos[t.id] = [470, y(i, themes.length)]); lits.forEach((l, i) => pos[l.id] = [760, y(i, lits.length)]);
+  let e = '', nd = '';
+  codes.forEach(c => { if (c.themeId && pos[c.themeId]) { const [x1, y1] = pos[c.id], [x2, y2] = pos[c.themeId]; e += `<path d="M${x1 + 8} ${y1} C ${x1 + 140} ${y1}, ${x2 - 140} ${y2}, ${x2 - 10} ${y2}" fill="none" stroke="${safeColor(c.color)}" stroke-width="2" opacity=".7"/>`; } });
+  P.links.filter(l => l.targetType !== 'segment').forEach(l => { const a = pos[l.litId], b = pos[l.targetId]; if (!a || !b) return; const col = l.relation === 'Supports' ? '#16a34a' : l.relation === 'Contradicts' ? '#dc2626' : '#94a3b8';
+    e += `<path d="M${a[0] - 10} ${a[1]} C ${a[0] - 160} ${a[1]}, ${b[0] + 160} ${b[1]}, ${b[0] + 10} ${b[1]}" fill="none" stroke="${col}" stroke-width="1.6" stroke-dasharray="5 4"><title>${esc(l.relation)}</title></path>`; });
+  codes.forEach(c => { const [x, yy] = pos[c.id]; nd += `<g data-act="retrieve" data-id="${c.id}" style="cursor:pointer"><circle cx="${x}" cy="${yy}" r="7" fill="${safeColor(c.color)}"/><text x="${x - 14}" y="${yy + 4}" text-anchor="end">${esc(clip(c.name, 26))} (${(ix.segByCode[c.id] || []).length})</text></g>`; });
+  themes.forEach(t => { const [x, yy] = pos[t.id]; nd += `<g data-act="retrieve" data-id="${t.id}" style="cursor:pointer"><rect x="${x - 10}" y="${yy - 13}" width="200" height="26" rx="13" fill="${rgba(t.color, .25)}" stroke="${safeColor(t.color)}"/><text x="${x + 2}" y="${yy + 4}" font-weight="700">${esc(clip(t.name, 28))}</text></g>`; });
+  lits.forEach(l => { const [x, yy] = pos[l.id]; nd += `<g><rect x="${x - 10}" y="${yy - 11}" width="170" height="22" rx="4" fill="none" stroke="#94a3b8"/><text x="${x - 2}" y="${yy + 4}">${esc(clip(cite(l), 26))}</text></g>`; });
+  const hd = `<text x="180" y="16" text-anchor="end" font-weight="700">Codes</text><text x="470" y="16" font-weight="700">Themes</text><text x="760" y="16" font-weight="700">Literature</text>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="100%" style="min-width:760px;max-height:${Math.max(300, H)}px" role="img" aria-label="Thematic map of codes, themes and literature">${hd}${e}${nd}</svg>`;
+}
+function afterThemes(){
+  $$('[data-drag]').forEach(ch => ch.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', ch.dataset.drag); }));
+  $$('[data-drop]').forEach(z => {
+    z.addEventListener('dragover', e => { e.preventDefault(); z.classList.add('over'); });
+    z.addEventListener('dragleave', () => z.classList.remove('over'));
+    z.addEventListener('drop', e => { e.preventDefault(); const c = find(P.codes, e.dataTransfer.getData('text/plain')); if (!c) return;
+      c.themeId = z.dataset.drop; const t = find(P.themes, c.themeId); log('Moved code', `${c.name} → ${t ? t.name : 'no theme'}`); touch(); render(); });
+  });
+}
+
+/* ---------- Literature ---------- */
+V.literature = () => {
+  const ix = IX();
+  const lit = P.literature.map(l => { const ls = P.links.filter(k => k.litId === l.id);
+    return `<div class="card" style="margin-bottom:8px"><details><summary>${esc(cite(l))} — ${esc(clip(l.title || 'Untitled', 90))} <span class="pill">${ls.length} links</span></summary>
+      <div class="grid2" style="gap:8px;margin-top:6px">
+        <div><label class="f">Author(s)</label><div class="hint">Surname, Initials; separate authors with ;</div><input data-bind="literature|${l.id}|authors" value="${esc(l.authors)}"></div>
+        <div><label class="f">Year</label><input data-bind="literature|${l.id}|year" value="${esc(l.year)}"></div>
+        <div><label class="f">Title</label><input data-bind="literature|${l.id}|title" value="${esc(l.title)}"></div>
+        <div><label class="f">Journal / publisher</label><input data-bind="literature|${l.id}|venue" value="${esc(l.venue)}"></div>
+        <div><label class="f">DOI or URL</label><input data-bind="literature|${l.id}|doi" value="${esc(l.doi)}"></div>
+        <div><label class="f">Key concept or theory</label><input data-bind="literature|${l.id}|concept" value="${esc(l.concept)}"></div>
+        <div><label class="f">Research context</label><input data-bind="literature|${l.id}|context" value="${esc(l.context)}" placeholder="Country, sector, sample, method"></div>
+        <div><label class="f">Your notes</label><textarea data-bind="literature|${l.id}|notes" rows="2">${esc(l.notes)}</textarea></div></div>
+      <h3>Connections to your findings</h3>${ls.map(k => `<div class="row" style="justify-content:space-between"><span><span class="pill">${esc(k.relation)}</span> ${k.targetType === 'segment' ? 'Excerpt: “' + esc(clip((find(P.segments, k.targetId) || {}).text || '(deleted)', 60)) + '”' : esc(k.targetType) + ': ' + esc(targetName(k.targetId, ix))} ${k.note ? '— ' + esc(k.note) : ''}</span><button class="btn sm ghost" data-act="delLink" data-id="${k.id}" aria-label="Remove link">✕</button></div>`).join('') || '<p class="muted">Not connected yet.</p>'}
+      <div class="row" style="margin-top:8px"><button class="btn sm" data-act="addLink" data-lit="${l.id}">+ Connect to a code or theme</button><button class="btn sm danger" data-act="delLit" data-id="${l.id}">Delete reference</button></div></details></div>`; }).join('');
+  const targets = [...P.themes, ...P.codes.filter(c => P.links.some(k => k.targetId === c.id))];
+  const mtx = P.literature.length && targets.length ? `<h2>Literature-to-findings matrix</h2><div class="card scroll"><table class="t"><thead><tr><th>Reference</th>${targets.map(t => `<th>${esc(clip(t.name, 22))}${ix.theme[t.id] ? '' : ' <span class="muted">(code)</span>'}</th>`).join('')}</tr></thead><tbody>
+      ${P.literature.map(l => `<tr><td>${esc(cite(l))}</td>${targets.map(t => { const rel = P.links.filter(k => k.litId === l.id && (k.targetId === t.id || (ix.theme[t.id] && ix.code[k.targetId] && ix.code[k.targetId].themeId === t.id))).map(k => k.relation); return `<td>${[...new Set(rel)].map(r => `<span class="pill">${esc(r)}</span>`).join(' ')}</td>`; }).join('')}</tr>`).join('')}</tbody></table></div>` : '';
+  return `<h1>3. Literature</h1><p class="lead">Record sources you have actually read, then say how each one relates to your codes and themes. The app never suggests or invents citations.</p>
+    <div class="row" style="margin-bottom:12px"><button class="btn primary" data-act="addLit">Add reference</button><button class="btn" data-act="importRis" title="Export RIS from Zotero, Mendeley or EndNote">Import RIS</button><button class="btn" data-act="exportRis">Export RIS</button><span class="muted">${P.literature.length} references · ${P.links.length} connections</span></div>
+    ${lit || '<div class="card empty">No references yet.</div>'}${mtx}`;
+};
+
+/* ---------- Triangulation ---------- */
+V.triangulate = () => {
+  const ix = IX();
+  if (!P.themes.length && !P.codes.length) return `<h1>6. Triangulation</h1><div class="card empty">Create codes and themes first.</div>`;
+  if (!ix.theme[S.tri] && !ix.code[S.tri]) S.tri = (P.themes[0] || P.codes[0]).id;
+  const id = S.tri; const T = P.triangulation[id] ||= { rows:{}, types:{}, interpretation:'', attr:'' };
+  const segs = segsForTarget(id, ix);
+  const types = [...new Set(P.sources.map(s => s.type))];
+  const persp = [...types.map(t => ['type:' + t, t, segs.filter(s => ix.src[s.sourceId] && ix.src[s.sourceId].type === t)]),
+    ['lit', 'Literature', null]];
+  const litLinks = P.links.filter(l => l.targetId === id || (ix.theme[id] && ix.code[l.targetId] && ix.code[l.targetId].themeId === id) || (l.targetType === 'segment' && segs.some(s => s.id === l.targetId)));
+  const rowHtml = ([key, label, ss]) => { const r = T.rows[key] || {};
+    const ev = ss ? (ss.length ? `<details><summary style="font-weight:400">${ss.length} excerpt${ss.length > 1 ? 's' : ''} from ${new Set(ss.map(s => s.sourceId)).size} source(s)</summary>${ss.slice(0, 30).map(s => `<blockquote style="font-size:13px">${esc(clip(s.text, 220))}<div class="hint">${esc(ix.src[s.sourceId].name)}${s.negative ? ' · <b style="color:var(--accent)">negative case</b>' : ''}</div></blockquote>`).join('')}</details>` : '<span class="muted">No coded evidence from this source type.</span>')
+      : (litLinks.length ? [...new Set(litLinks.map(l => { const lit = find(P.literature, l.litId); return `<div><span class="pill">${esc(l.relation)}</span> ${esc(lit ? cite(lit) : '(deleted)')}</div>`; }))].join('') : '<span class="muted">No literature connected yet.</span>');
+    return `<tr><td><b>${esc(label)}</b></td><td>${ev}</td><td><select data-bind="tri|${id}|rows.${key}.status" aria-label="Status for ${esc(label)}">${TRI_STATUS.map(s => `<option ${s === (r.status || 'Not reviewed') ? 'selected' : ''}>${s}</option>`).join('')}</select></td>
+      <td><textarea data-bind="tri|${id}|rows.${key}.note" rows="2" aria-label="Note for ${esc(label)}">${esc(r.note || '')}</textarea></td></tr>`; };
+  const ak = T.attr || '';
+  const grp = ak ? (() => { const vals = [...new Set(P.sources.map(s => s.attrs[ak] || '(blank)'))];
+    return `<table class="t" style="margin-top:8px"><thead><tr><th>${esc(ak)}</th><th>Sources</th><th>Excerpts for this ${ix.theme[id] ? 'theme' : 'code'}</th><th>Sources with evidence</th></tr></thead><tbody>${vals.map(v => { const srcs = P.sources.filter(s => (s.attrs[ak] || '(blank)') === v); const ss = segs.filter(s => srcs.some(x => x.id === s.sourceId));
+      return `<tr><td>${esc(v)}</td><td>${srcs.length}</td><td>${ss.length}</td><td>${new Set(ss.map(s => s.sourceId)).size} / ${srcs.length}</td></tr>`; }).join('')}</tbody></table>`; })() : '';
+  return `<h1>6. Triangulation</h1><p class="lead">Compare what different sources, methods, groups and the literature say about one theme. Triangulation is not counting agreement. Look for convergence, divergence and silence, then explain the differences.</p>
+    <div class="row" style="margin-bottom:12px"><label for="triSel"><b>Theme or code</b></label><select id="triSel" data-act-change="triSel" style="width:auto;min-width:260px">${P.themes.length ? `<optgroup label="Themes">${P.themes.map(t => `<option value="${t.id}" ${t.id === id ? 'selected' : ''}>${esc(t.name)}</option>`).join('')}</optgroup>` : ''}<optgroup label="Codes">${P.codes.map(c => `<option value="${c.id}" ${c.id === id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</optgroup></select>
+    <span class="pill">${segs.length} excerpts</span><span class="pill">${segs.filter(s => s.negative).length} negative cases</span></div>
+    <div class="card scroll"><table class="t"><thead><tr><th style="width:130px">Perspective</th><th>Evidence</th><th style="width:160px">Pattern</th><th style="width:30%">What does this perspective add?</th></tr></thead><tbody>${persp.map(rowHtml).join('')}</tbody></table></div>
+    <div class="grid2" style="margin-top:14px">
+      <div class="card"><h3 style="margin-top:0">Compare participant groups</h3><select data-bind="tri|${id}|attr" data-rr="1" aria-label="Attribute to compare"><option value="">Choose an attribute…</option>${P.attrKeys.map(k => `<option ${k === ak ? 'selected' : ''}>${esc(k)}</option>`).join('')}</select>${grp}</div>
+      <div class="card"><h3 style="margin-top:0">Types of triangulation used</h3><div class="hint">After Denzin (1978) and Patton (1999).</div>
+        ${[['data', 'Data sources (people, times, places)'], ['method', 'Methods (interview, observation, documents)'], ['investigator', 'Investigators (another coder or reviewer)'], ['theory', 'Theories (more than one lens)']].map(([k, l]) => `<label class="row"><input type="checkbox" data-bind="tri|${id}|types.${k}" ${T.types[k] ? 'checked' : ''}> ${l}</label>`).join('')}</div></div>
+    <div class="card" style="margin-top:14px"><label class="f" for="triInt" style="margin-top:0">Triangulated interpretation</label><div class="hint">Where do perspectives converge? Where do they diverge, and why might that be (role, power, method, context)? What alternative explanations remain?</div>
+      <textarea id="triInt" data-bind="tri|${id}|interpretation" rows="6">${esc(T.interpretation)}</textarea></div>`;
+};
+
+/* ---------- Retrieve & matrix ---------- */
+V.explore = () => {
+  const t = S.ex.tab;
+  return `<h1>Retrieve, compare and search</h1><p class="lead">Pull together every excerpt for a code or theme, compare cases in a matrix, and search the words participants used.</p>
+    <div class="tabs" role="tablist">${[['retrieve', 'Retrieve excerpts'], ['matrix', 'Matrix'], ['search', 'Word search & frequency']].map(([k, l]) => `<button role="tab" aria-selected="${t === k}" class="${t === k ? 'on' : ''}" data-act="exTab" data-t="${k}">${l}</button>`).join('')}</div>
+    ${t === 'retrieve' ? exRetrieve() : t === 'matrix' ? exMatrix() : exSearch()}`;
+};
+function segRow(s, ix){
+  return `<div class="hit"><blockquote>${esc(s.text)}</blockquote><div class="row"><span class="hint" style="margin:0">${esc(segLabel(s, ix))}</span>${s.codeIds.map(c => ix.code[c] ? `<span class="chip" style="--c:${safeColor(ix.code[c].color)};cursor:default"><i></i>${esc(ix.code[c].name)}</span>` : '').join('')}${s.negative ? '<span class="pill" style="color:var(--accent)">negative case</span>' : ''}<button class="btn sm" data-act="openSeg" data-id="${s.id}">Open in context</button></div>
+    ${s.inference || s.interpretation ? `<div class="hint">${s.inference ? '<b>Inference:</b> ' + esc(clip(s.inference, 200)) + ' ' : ''}${s.interpretation ? '<b>Interpretation:</b> ' + esc(clip(s.interpretation, 200)) : ''}</div>` : ''}</div>`;
+}
+function filteredSegs(ix){
+  const f = S.ex;
+  return P.segments.filter(s => {
+    const src = ix.src[s.sourceId]; if (!src) return false;
+    if (f.code && !(ix.theme[f.code] ? segThemes(s, ix).includes(f.code) : s.codeIds.includes(f.code))) return false;
+    if (f.source && s.sourceId !== f.source) return false;
+    if (f.type && src.type !== f.type) return false;
+    if (f.attr) { const [k, v] = f.attr.split('='); if ((src.attrs[k] || '') !== v) return false; }
+    if (f.neg && !s.negative) return false;
+    if (f.q && !(s.text + ' ' + (s.inference || '') + ' ' + (s.interpretation || '') + ' ' + (s.memo || '')).toLowerCase().includes(f.q.toLowerCase())) return false;
+    return true;
+  });
+}
+function exRetrieve(){
+  const ix = IX(); const f = S.ex; const res = filteredSegs(ix);
+  const attrOpts = P.attrKeys.flatMap(k => [...new Set(P.sources.map(s => s.attrs[k]).filter(Boolean))].map(v => `${k}=${v}`));
+  return `<div class="card"><div class="grid3">
+    <div><label class="f" style="margin-top:0">Code or theme</label><select data-exf="code"><option value="">All</option>${P.themes.length ? `<optgroup label="Themes">${P.themes.map(t => `<option value="${t.id}" ${f.code === t.id ? 'selected' : ''}>${esc(t.name)}</option>`).join('')}</optgroup>` : ''}<optgroup label="Codes">${P.codes.map(c => `<option value="${c.id}" ${f.code === c.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</optgroup></select></div>
+    <div><label class="f" style="margin-top:0">Source</label><select data-exf="source"><option value="">All</option>${P.sources.map(s => `<option value="${s.id}" ${f.source === s.id ? 'selected' : ''}>${esc(s.name)}</option>`).join('')}</select></div>
+    <div><label class="f" style="margin-top:0">Source type</label><select data-exf="type"><option value="">All</option>${SRC_TYPES.map(t => `<option ${f.type === t ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
+    <div><label class="f" style="margin-top:0">Participant attribute</label><select data-exf="attr"><option value="">All</option>${attrOpts.map(a => `<option ${f.attr === a ? 'selected' : ''}>${esc(a)}</option>`).join('')}</select></div>
+    <div><label class="f" style="margin-top:0">Contains words</label><input type="search" data-exf="q" value="${esc(f.q)}"></div>
+    <div><label class="f" style="margin-top:0">&nbsp;</label><label class="row"><input type="checkbox" data-exf="neg" ${f.neg ? 'checked' : ''}> Negative cases only</label></div></div>
+    <div class="row" style="margin-top:10px"><b>${res.length} excerpt${res.length === 1 ? '' : 's'}</b> from ${new Set(res.map(s => s.sourceId)).size} source(s)<button class="btn sm" data-act="exportSegs">Export these (CSV)</button></div></div>
+    <div id="exRes">${res.slice(0, 300).map(s => segRow(s, ix)).join('') || '<p class="muted" style="margin-top:12px">No excerpts match.</p>'}${res.length > 300 ? '<p class="muted">Showing the first 300. Narrow the filters or export to see all.</p>' : ''}</div>`;
+}
+function matrixData(ix){
+  const f = S.ex;
+  let rows;
+  if (f.rows === 'source') rows = P.sources.map(s => ({ key:s.id, label:s.name, has:x => x.sourceId === s.id }));
+  else if (f.rows === 'type') rows = [...new Set(P.sources.map(s => s.type))].map(t => ({ key:t, label:t, has:x => ix.src[x.sourceId] && ix.src[x.sourceId].type === t }));
+  else { const k = f.rows.slice(5); rows = [...new Set(P.sources.map(s => s.attrs[k] || '(blank)'))].map(v => ({ key:v, label:`${k}: ${v}`, has:x => ix.src[x.sourceId] && (ix.src[x.sourceId].attrs[k] || '(blank)') === v })); }
+  const cols = f.cols === 'themes' ? P.themes.map(t => ({ key:t.id, label:t.name, color:t.color, has:x => segThemes(x, ix).includes(t.id) })) : orderedCodes().map(c => ({ key:c.id, label:c.name, color:c.color, has:x => x.codeIds.includes(c.id) }));
+  const cell = (r, c) => P.segments.filter(x => r.has(x) && c.has(x));
+  return { rows, cols, cell };
+}
+function exMatrix(){
+  const ix = IX(); const f = S.ex; const { rows, cols, cell } = matrixData(ix);
+  let max = 1; const vals = rows.map(r => cols.map(c => { const n = cell(r, c).length; max = Math.max(max, n); return n; }));
+  const sel = f.sel; let selList = '';
+  if (sel) { const r = rows.find(x => x.key === sel.r), c = cols.find(x => x.key === sel.c); if (r && c) { const ss = cell(r, c); selList = `<h2>${esc(r.label)} × ${esc(c.label)} <span class="pill">${ss.length}</span></h2>${ss.map(s => segRow(s, ix)).join('') || '<p class="muted">No excerpts.</p>'}`; } }
+  return `<div class="row" style="margin-bottom:10px"><label>Rows <select data-exf="rows" style="width:auto"><option value="source" ${f.rows === 'source' ? 'selected' : ''}>Each source (case)</option><option value="type" ${f.rows === 'type' ? 'selected' : ''}>Source type</option>${P.attrKeys.map(k => `<option value="attr:${esc(k)}" ${f.rows === 'attr:' + k ? 'selected' : ''}>Attribute: ${esc(k)}</option>`).join('')}</select></label>
+    <label>Columns <select data-exf="cols" style="width:auto"><option value="codes" ${f.cols === 'codes' ? 'selected' : ''}>Codes</option><option value="themes" ${f.cols === 'themes' ? 'selected' : ''}>Themes</option></select></label><button class="btn sm" data-act="exportMatrix">Export matrix (CSV)</button></div>
+    ${cols.length && rows.length ? `<div class="card scroll" style="max-height:60vh"><table class="t"><thead><tr><th></th>${cols.map(c => `<th style="min-width:70px"><span style="color:${safeColor(c.color)}">●</span> ${esc(clip(c.label, 24))}</th>`).join('')}<th>Total</th></tr></thead><tbody>
+      ${rows.map((r, i) => `<tr><td><b>${esc(clip(r.label, 34))}</b></td>${cols.map((c, j) => { const n = vals[i][j]; return `<td class="cell ${sel && sel.r === r.key && sel.c === c.key ? 'sel' : ''}" data-act="mxCell" data-r="${esc(r.key)}" data-c="${c.key}" style="background:${n ? rgba(c.color, .12 + .55 * n / max) : 'transparent'}">${n || ''}</td>`; }).join('')}<td class="cell">${vals[i].reduce((a, b) => a + b, 0)}</td></tr>`).join('')}</tbody></table></div>` : '<div class="card empty">Add sources and codes to build a matrix.</div>'}
+    <p class="hint">Numbers count coded excerpts, not people or importance. A frequent code is not automatically a significant one. Click a cell to read the evidence.</p>${selList}`;
+}
+const STOP = new Set('a about above after again against all am an and any are as at be because been before being below between both but by can did do does doing down during each few for from further had has have having he her here hers herself him himself his how i if in into is it its itself just me more most my myself no nor not now of off on once only or other our ours ourselves out over own same she should so some such than that the their theirs them themselves then there these they this those through to too under until up very was we were what when where which while who whom why will with you your yours yourself yourselves would could also like yes um uh okay ok really get got go going know think say said one thing things lot well mean dont im its thats youre theyre cant didnt doesnt wasnt isnt aint de di dem fi mi seh nuh weh deh'.split(' '));
+function exSearch(){
+  const q = S.ex.wq.trim(); let hits = '', n = 0;
+  if (q.length >= 2) { const re = new RegExp(escRe(q), 'gi');
+    for (const s of P.sources) { let m; re.lastIndex = 0; while ((m = re.exec(s.text)) && n < 400) { n++; const a = Math.max(0, m.index - 70), b = Math.min(s.text.length, m.index + m[0].length + 70);
+      hits += `<div class="hit"><span class="hint">${esc(s.name)}</span><div>…${esc(s.text.slice(a, m.index))}<em>${esc(m[0])}</em>${esc(s.text.slice(m.index + m[0].length, b))}…</div><button class="btn sm" data-act="jump" data-id="${s.id}" data-s="${m.index}" data-e="${m.index + m[0].length}">Code in context</button></div>`; } } }
+  const freq = {}; P.sources.forEach(s => (s.text.toLowerCase().replace(/[’']/g, '').match(/[a-zà-ÿ]{3,}/g) || []).forEach(w => { if (!STOP.has(w)) freq[w] = (freq[w] || 0) + 1; }));
+  const top = Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 40);
+  return `<div class="grid2"><div><label class="f" for="wq" style="margin-top:0">Search all sources</label><input type="search" id="wq" data-exf="wq" value="${esc(q)}" placeholder="A word or phrase…">
+    <p class="hint">${q.length >= 2 ? `${n}${n >= 400 ? '+' : ''} matches` : 'Type at least 2 characters and press Enter.'}</p>${hits}</div>
+    <div class="card"><h3 style="margin-top:0">Most frequent words</h3><div class="hint">A familiarisation aid only. Frequency is not meaning.</div>${top.map(([w, c]) => `<button class="chip" data-act="wordSearch" data-w="${esc(w)}" style="--c:var(--brand)">${esc(w)} <kbd>${c}</kbd></button>`).join('') || '<p class="muted">No text yet.</p>'}</div></div>`;
+}
+
+/* ---------- Journal ---------- */
+V.journal = () => {
+  const list = P.journal.filter(j => !S.journalType || j.type === S.journalType).slice().reverse();
+  return `<h1>Reflexive journal and decision trail</h1><p class="lead">Record assumptions, feelings, analytic hunches and methodological decisions as you go. This is your audit trail and the evidence of your reflexivity.</p>
+    <div class="row" style="margin-bottom:12px">${JOURNAL_TYPES.map(t => `<button class="btn" data-act="addJournal" data-t="${t}">+ ${t}</button>`).join('')}</div>
+    <div class="row" style="margin-bottom:8px"><label>Show <select data-act-change="journalType" style="width:auto"><option value="">All entries</option>${JOURNAL_TYPES.map(t => `<option ${t === S.journalType ? 'selected' : ''}>${t}</option>`).join('')}</select></label></div>
+    ${list.map(j => `<div class="card" style="margin-bottom:8px"><div class="row"><span class="pill">${esc(j.type)}</span><span class="muted">${new Date(j.date).toLocaleString()}</span><div class="grow"></div><button class="btn sm danger" data-act="delJournal" data-id="${j.id}">Delete</button></div>
+      <input data-bind="journal|${j.id}|title" value="${esc(j.title)}" style="margin-top:6px;font-weight:600" aria-label="Entry title"><textarea data-bind="journal|${j.id}|body" rows="4" style="margin-top:6px" aria-label="Entry text">${esc(j.body)}</textarea></div>`).join('') || '<div class="card empty">No entries yet.</div>'}
+    <h2>Decision trail (automatic)</h2><div class="card scroll" style="max-height:340px"><table class="t"><thead><tr><th style="width:170px">When</th><th>Action</th><th>Detail</th></tr></thead><tbody>${P.log.slice(-300).reverse().map(l => `<tr><td>${new Date(l.t).toLocaleString()}</td><td>${esc(l.a)}</td><td>${esc(l.d)}</td></tr>`).join('') || '<tr><td colspan="3" class="muted">Nothing yet.</td></tr>'}</tbody></table></div>`;
+};
+
+/* ---------- Write-up ---------- */
+function methodsDraft(){
+  const m = METHODS[P.methodology]; const types = {}; P.sources.forEach(s => types[s.type] = (types[s.type] || 0) + 1);
+  return `Data comprised ${P.sources.length} sources (${Object.entries(types).map(([t, n]) => `${n} ${t.toLowerCase()}${n > 1 ? 's' : ''}`).join(', ') || 'none yet'}), totalling ${P.sources.reduce((a, s) => a + words(s.text), 0).toLocaleString()} words. Analysis followed ${m.name.toLowerCase()} (${m.ref}). ${P.codes.length} codes were developed and organised into ${P.themes.length} themes. Coded excerpts were connected to the literature (${P.links.length} documented connections), and each theme was triangulated across source types and participant groups. A reflexive journal and an automatic decision trail recorded analytic decisions. [Edit this paragraph: add your sampling, ethics approval, how codes were developed, and how you ensured trustworthiness.]`;
+}
+V.write = () => {
+  const ix = IX();
+  const W = P.writeup;
+  const themeBlock = t => { const w = W[t.id] ||= { claim:'', evidence:[], literature:'', alternatives:'', finding:'' }; const segs = segsForTarget(t.id, ix);
+    const lits = P.links.filter(l => l.targetId === t.id || (ix.code[l.targetId] && ix.code[l.targetId].themeId === t.id) || (l.targetType === 'segment' && segs.some(s => s.id === l.targetId)));
+    const fld = (k, l, h, r = 3) => `<label class="f">${l}</label><div class="hint">${h}</div><textarea data-bind="write|${t.id}|${k}" rows="${r}">${esc(w[k] || '')}</textarea>`;
+    return `<div class="card theme-card" style="--c:${safeColor(t.color)};margin-bottom:14px"><h2 style="margin-top:0">${esc(t.name)}</h2>${t.concept ? `<p class="hint">Central concept: ${esc(t.concept)}</p>` : ''}
+      ${fld('claim', 'Analytical claim', 'What pattern or meaning do you identify? One or two sentences.', 2)}
+      <label class="f">Evidence</label><div class="hint">Tick the excerpts to quote (2–4 strong ones usually beat many weak ones).</div>
+      <div style="max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:6px">${segs.map(s => `<label class="row" style="align-items:flex-start;flex-wrap:nowrap;margin:4px 0;font-size:13px"><input type="checkbox" data-wev="${t.id}" value="${s.id}" ${w.evidence.includes(s.id) ? 'checked' : ''} style="margin-top:4px"> <span>“${esc(clip(s.text, 160))}” <span class="muted">(${esc(ix.src[s.sourceId] ? ix.src[s.sourceId].name : '')})</span>${s.negative ? ' <b style="color:var(--accent)">negative case</b>' : ''}</span></label>`).join('') || '<span class="muted">No excerpts coded to this theme yet.</span>'}</div>
+      ${fld('literature', 'Connection to literature', lits.length ? 'Your connections: ' + esc([...new Set(lits.map(l => { const r = find(P.literature, l.litId); return r ? `${cite(r)} (${l.relation.toLowerCase()})` : ''; }))].filter(Boolean).join('; ')) : 'No connections recorded yet: add them in Literature.')}
+      ${fld('alternatives', 'Alternative perspectives and negative cases', `${segs.filter(s => s.negative).length} negative case(s) recorded. What contradicts this, and what other explanations are possible?`)}
+      ${fld('finding', 'Research finding', 'Your synthesised interpretation, grounded in evidence and answering the research question.', 4)}</div>`; };
+  return `<h1>7. Write-up studio</h1><p class="lead">Turn each theme into a structured finding: claim, evidence, literature, alternatives, finding. You remain the author. The app assembles your words; it does not write for you.</p>
+    <div class="row" style="margin-bottom:12px"><button class="btn primary" data-act="exportFindings">Download findings draft (Word)</button><button class="btn" data-act="exportFindingsMd">Download as Markdown</button></div>
+    <div class="card" style="margin-bottom:14px"><h2 style="margin-top:0">Methods: analysis paragraph</h2><div class="row"><button class="btn sm" data-act="methodsDraft">Insert a starter paragraph from my project</button></div>
+      <textarea data-bind="project||methods" rows="5" style="margin-top:8px">${esc(P.methods)}</textarea></div>
+    ${P.themes.map(themeBlock).join('') || '<div class="card empty">Create themes first (Themes & map).</div>'}`;
+};
+function findingsHtml(){
+  const ix = IX(); let h = `<h1>${esc(P.name)}: Findings</h1>`;
+  if (P.researchQuestions) h += `<p><b>Research question(s):</b> ${esc(P.researchQuestions).replace(/\n/g, '<br>')}</p>`;
+  if (P.methods) h += `<h2>Analysis</h2><p>${esc(P.methods).replace(/\n/g, '<br>')}</p>`;
+  P.themes.forEach(t => { const w = P.writeup[t.id] || {}; h += `<h2>${esc(t.name)}</h2>`;
+    if (w.claim) h += `<p>${esc(w.claim)}</p>`;
+    (w.evidence || []).map(id => find(P.segments, id)).filter(Boolean).forEach(s => { h += `<blockquote>“${esc(s.text)}” (${esc(segLabel(s, ix))})</blockquote>`; if (s.languageNote) h += `<p class="m">Language note: ${esc(s.languageNote)}</p>`; });
+    if (w.literature) h += `<p>${esc(w.literature)}</p>`;
+    if (w.alternatives) h += `<p>${esc(w.alternatives)}</p>`;
+    if (w.finding) h += `<p><b>Finding.</b> ${esc(w.finding)}</p>`; });
+  const used = [...new Set(P.links.map(l => l.litId))].map(id => find(P.literature, id)).filter(Boolean).sort((a, b) => (a.authors || '').localeCompare(b.authors || ''));
+  if (used.length) h += `<h2>References</h2>${used.map(l => `<p>${esc(apaRef(l))}</p>`).join('')}<p class="m">Check every reference against the original source and APA 7 before submission.</p>`;
+  return h;
+}
+function findingsMd(){
+  const ix = IX(); let m = `# ${P.name}: Findings\n\n`;
+  if (P.researchQuestions) m += `**Research question(s):** ${P.researchQuestions}\n\n`;
+  if (P.methods) m += `## Analysis\n\n${P.methods}\n\n`;
+  P.themes.forEach(t => { const w = P.writeup[t.id] || {}; m += `## ${t.name}\n\n`; if (w.claim) m += w.claim + '\n\n';
+    (w.evidence || []).map(id => find(P.segments, id)).filter(Boolean).forEach(s => m += `> “${s.text.replace(/\n/g, ' ')}” (${segLabel(s, ix)})\n\n`);
+    ['literature', 'alternatives'].forEach(k => { if (w[k]) m += w[k] + '\n\n'; }); if (w.finding) m += `**Finding.** ${w.finding}\n\n`; });
+  return m;
+}
+
+/* ---------- Export ---------- */
+V.export = () => `<h1>Export and submit</h1><p class="lead">Your work lives in this browser on this device. Download a backup regularly (to a USB drive or a cloud folder you trust) and submit exports through your course page in Moodle.</p>
+  <div class="grid3">
+  ${[['exportBackup', 'Project backup (.cqrl.json)', 'Everything. Re-open it on any computer with Open backup.'],
+     ['exportReport', 'Full analysis report (Word)', 'Study details, codebook, themes with evidence, literature, triangulation, findings and journal.'],
+     ['exportFindings', 'Findings draft (Word)', 'Your write-up assembled from the Write-up studio.'],
+     ['exportSegsAll', 'Coded excerpts (CSV)', 'Every excerpt with codes, themes, inference, interpretation and triangulation. Opens in Excel.'],
+     ['exportCodebook', 'Codebook (Word)', 'Definitions, inclusion and exclusion rules, counts.'],
+     ['exportCodebookCsv', 'Codebook (CSV)', 'For spreadsheets or other QDA software.'],
+     ['exportMatrix', 'Case-by-code matrix (CSV)', 'Uses the current Matrix settings.'],
+     ['exportRis', 'Literature (RIS)', 'For Zotero, Mendeley or EndNote.'],
+     ['exportJournal', 'Journal and decision trail (Word)', 'Evidence of reflexivity and an audit trail.']].map(([a, t, d]) => `<div class="card"><b>${t}</b><p class="hint">${d}</p><button class="btn primary sm" data-act="${a}">Download</button></div>`).join('')}
+  </div>
+  <p class="hint" style="margin-top:14px">In Moodle, if downloads do nothing, open the Lab in a new window (the activity link usually has an option for this) and try again.</p>`;
+
+function reportHtml(){
+  const ix = IX(); const m = METHODS[P.methodology]; let h = `<h1>${esc(P.name)}</h1><p class="m">Analysis report · ${new Date().toLocaleDateString()} · ${esc(m.name)}</p>`;
+  const para = (l, v) => v ? `<h3>${l}</h3><p>${esc(v).replace(/\n/g, '<br>')}</p>` : '';
+  h += para('Research question(s)', P.researchQuestions) + para('Context and participants', P.description) + para('Researcher positionality', P.positionality) + para('Analysis', P.methods);
+  h += `<h2>Sources</h2><table><tr><th>Source</th><th>Type</th>${P.attrKeys.map(k => `<th>${esc(k)}</th>`).join('')}<th>Words</th><th>Excerpts</th></tr>${P.sources.map(s => `<tr><td>${esc(s.name)}</td><td>${esc(s.type)}</td>${P.attrKeys.map(k => `<td>${esc(s.attrs[k] || '')}</td>`).join('')}<td>${words(s.text)}</td><td>${(ix.segBySrc[s.id] || []).length}</td></tr>`).join('')}</table>`;
+  h += `<h2>Codebook</h2>` + codebookTable(ix);
+  h += `<h2>Themes</h2>`;
+  P.themes.forEach(t => { const segs = segsForTarget(t.id, ix); const T = P.triangulation[t.id];
+    h += `<h3>${esc(t.name)} (${esc(t.status || 'Candidate')})</h3>${t.concept ? `<p><b>Central organising concept:</b> ${esc(t.concept)}</p>` : ''}${t.narrative ? `<p>${esc(t.narrative)}</p>` : ''}<p><b>Codes:</b> ${esc(P.codes.filter(c => c.themeId === t.id).map(c => c.name).join(', ') || 'none')}</p>`;
+    h += segs.slice(0, 12).map(s => `<blockquote>“${esc(s.text)}” (${esc(segLabel(s, ix))})${s.negative ? ' [negative case]' : ''}</blockquote>${s.interpretation ? `<p class="m">Interpretation: ${esc(s.interpretation)}</p>` : ''}`).join('');
+    if (segs.length > 12) h += `<p class="m">…and ${segs.length - 12} more excerpts (see the CSV export).</p>`;
+    if (T) { h += `<p><b>Triangulation.</b></p><table><tr><th>Perspective</th><th>Pattern</th><th>Note</th></tr>${Object.entries(T.rows || {}).map(([k, r]) => `<tr><td>${esc(k.replace(/^type:/, '').replace(/^lit$/, 'Literature'))}</td><td>${esc(r.status || '')}</td><td>${esc(r.note || '')}</td></tr>`).join('')}</table>${T.interpretation ? `<p>${esc(T.interpretation)}</p>` : ''}`; } });
+  h += `<h2>Literature connections</h2><table><tr><th>Reference</th><th>Relation</th><th>Connected to</th><th>Note</th></tr>${P.links.map(l => { const lit = find(P.literature, l.litId); return `<tr><td>${esc(lit ? cite(lit) : '')}</td><td>${esc(l.relation)}</td><td>${l.targetType === 'segment' ? 'Excerpt: “' + esc(clip((find(P.segments, l.targetId) || {}).text || '', 80)) + '”' : esc(targetName(l.targetId, ix))}</td><td>${esc(l.note || '')}</td></tr>`; }).join('')}</table>`;
+  h += findingsHtml().replace(/<h1>.*?<\/h1>/, '<h2>Findings</h2>');
+  h += `<h2>Reflexive journal</h2>${P.journal.map(j => `<h3>${esc(j.title || j.type)} <span class="m">(${esc(j.type)}, ${new Date(j.date).toLocaleDateString()})</span></h3><p>${esc(j.body).replace(/\n/g, '<br>')}</p>`).join('') || '<p>No entries.</p>'}`;
+  return h;
+}
+function codebookTable(ix){
+  return `<table><tr><th>Theme</th><th>Code</th><th>Type</th><th>Definition</th><th>Use when</th><th>Do not use when</th><th>Excerpts</th><th>Sources</th></tr>${orderedCodes().map(c => { const segs = ix.segByCode[c.id] || [];
+    return `<tr><td>${esc((ix.theme[c.themeId] || {}).name || '')}</td><td>${esc(c.name)}</td><td>${esc(c.type)}</td><td>${esc(c.description)}</td><td>${esc(c.include)}</td><td>${esc(c.exclude)}</td><td>${segs.length}</td><td>${new Set(segs.map(s => s.sourceId)).size}</td></tr>`; }).join('')}</table>`;
+}
+function segsCSV(list){
+  const ix = IX();
+  const rows = [['Source', 'Source type', ...P.attrKeys, 'Start', 'End', 'Excerpt', 'Codes', 'Themes', 'Why these codes', 'Literature', 'Inference', 'Interpretation', 'Triangulation', 'Language note', 'Negative case', 'Memo']];
+  list.forEach(s => { const src = ix.src[s.sourceId] || { attrs:{} };
+    rows.push([src.name, src.type, ...P.attrKeys.map(k => src.attrs[k] || ''), s.start, s.end, s.text, s.codeIds.map(c => (ix.code[c] || {}).name).join('; '), segThemes(s, ix).map(t => ix.theme[t].name).join('; '), s.rationale, P.links.filter(l => l.targetId === s.id).map(l => { const r = find(P.literature, l.litId); return r ? `${cite(r)} [${l.relation}]` : ''; }).join('; '), s.inference, s.interpretation, s.triangulation, s.languageNote, s.negative ? 'yes' : '', s.memo]); });
+  return toCSV(rows);
+}
+
+/* ---------- About ---------- */
+V.about = () => `<h1>About and licence</h1>
+  <div class="grid2"><div class="card"><h2 style="margin-top:0">${APP.name}</h2><div class="kv"><span class="muted">Created by</span><span><b>${APP.author}</b></span><span class="muted">Edition</span><span>${APP.edition}</span><span class="muted">Version</span><span>${APP.version}</span><span class="muted">Licence</span><span>${APP.license}</span><span class="muted">Copyright</span><span>${APP.copyright}</span>${CFG.institution ? `<span class="muted">Institution</span><span>${esc(CFG.institution)}</span>` : ''}${CFG.course ? `<span class="muted">Course</span><span>${esc(CFG.course)}</span>` : ''}</div>
+    <p>This Community Edition is free software: you may use, study, share and modify it under the GNU Affero General Public License v3 or later. It comes with no warranty. Institutions that need different licence terms, hosting, LMS integration or support can obtain a commercial licence from the copyright holder.</p>
+    <h3>Creative rights</h3><p>The Caribbean Qualitative Research Lab was conceived, designed and created by <b>${APP.author}</b>. That includes the seven-stage analytical journey (Evidence → Coding → Literature → Inference → Interpretation → Triangulation → Write-up), the analytical-defence approach, the interface design, the guidance and practice materials, and the documentation. ${APP.author} asserts the moral right to be identified as the creator of this work. Under the licence’s additional terms, the attribution “Created by ${APP.author}” must be kept in every copy and every modified version.</p>
+    <p class="hint">“Caribbean Qualitative Research Lab” and “CQRL” are trademarks of the copyright holder. Your research data and your analysis belong to you, not to the software’s author.</p></div>
+  <div class="card"><h2 style="margin-top:0">Privacy</h2><ul style="padding-left:18px"><li>No AI. No account. No analytics. No network requests.</li><li>Projects are stored in this browser on this device (${DB.ok ? 'browser storage is working' : '<b style="color:var(--danger)">browser storage is blocked: use Save backup</b>'}).</li><li>Anyone who uses this browser profile can open your projects. On a shared computer, download a backup and use <b>Delete project</b> when you finish.</li><li>Backups are not encrypted. Store them as your ethics approval requires.</li></ul>
+    <div class="row"><button class="btn danger" data-act="delProject">Delete this project from this device</button></div></div></div>
+  <div class="card" style="margin-top:14px"><h2 style="margin-top:0">Method sources</h2><p class="hint">Braun, V., &amp; Clarke, V. (2006). Using thematic analysis in psychology. <i>Qualitative Research in Psychology, 3</i>(2), 77–101. · Braun, V., &amp; Clarke, V. (2021). <i>Thematic analysis: A practical guide</i>. Sage. · Gale, N. K., et al. (2013). Using the framework method for the analysis of qualitative data in multi-disciplinary health research. <i>BMC Medical Research Methodology, 13</i>, 117. · Hsieh, H.-F., &amp; Shannon, S. E. (2005). Three approaches to qualitative content analysis. <i>Qualitative Health Research, 15</i>(9), 1277–1288. · Charmaz, K. (2014). <i>Constructing grounded theory</i> (2nd ed.). Sage. · Riessman, C. K. (2008). <i>Narrative methods for the human sciences</i>. Sage. · Smith, J. A., Flowers, P., &amp; Larkin, M. (2022). <i>Interpretative phenomenological analysis</i> (2nd ed.). Sage. · Denzin, N. K. (1978). <i>The research act</i> (2nd ed.). McGraw-Hill. · Patton, M. Q. (1999). Enhancing the quality and credibility of qualitative analysis. <i>Health Services Research, 34</i>(5 Pt 2), 1189–1208.</p></div>`;
+
+/* ============================================================
+   Actions
+   ============================================================ */
+const ACT = {
+  go: t => go(t.dataset.v),
+  async newProject(){ const r = await ask('New project', [{ name:'name', label:'Project name', value:'', ph:'e.g. Teachers’ use of technology in rural schools' }], 'Create'); if (!r) return;
+    P = blankProject(r.name || 'Untitled project'); PROJECTS.push(P); log('Created project', P.name); await save(); S.view = 'guide'; S.sourceId = null; S.segmentId = null; render(); },
+  exportBackup(){ download(fileSafe(P.name) + '.cqrl.json', JSON.stringify(Object.assign({ app:APP.short, appVersion:APP.version, exported:now() }, P), null, 1), 'application/json'); toast('Backup downloaded'); },
+  async importBackup(){ const [f] = await pickFiles('.json,.cqrl.json,application/json', false); if (!f) return;
+    try { const d = JSON.parse(await f.text()); if (!Array.isArray(d.sources) || !Array.isArray(d.codes)) throw new Error('This is not a Lab backup file.');
+      delete d.app; delete d.appVersion; delete d.exported; const ex = PROJECTS.find(p => p.id === d.id);
+      if (ex) { const r = await ask('A project with this ID is already on this device', [{ name:'mode', label:'What should happen?', type:'select', value:'copy', options:[['copy', 'Open the backup as a separate copy'], ['replace', 'Replace the project on this device with the backup']] }], 'Continue'); if (!r) return;
+        if (r.mode === 'copy') { d.id = uid('p'); d.name += ' (restored copy)'; } else PROJECTS.splice(PROJECTS.indexOf(ex), 1); }
+      P = normalize(d); PROJECTS.push(P); log('Opened backup', f.name); await save(); S.view = 'guide'; render(); toast('Backup opened'); }
+    catch (e) { ask('Could not open that file', [{ type:'info', html:esc(e.message) }]); } },
+  async importSources(){ const files = await pickFiles('.txt,.md,.docx,.csv,text/plain,text/csv'); if (!files.length) return; let added = 0; const errs = [];
+    for (const f of files) { try { const ext = f.name.split('.').pop().toLowerCase(); const base = f.name.replace(/\.[^.]+$/, '');
+      if (ext === 'docx') { addSource(base, await readDocx(await f.arrayBuffer())); added++; }
+      else if (ext === 'csv') added += await importCsv(await f.text(), base);
+      else { addSource(base, (await f.text()).replace(/\r\n?/g, '\n')); added++; } } catch (e) { errs.push(`${f.name}: ${e.message}`); } }
+    touch(); render(); toast(`${added} source${added === 1 ? '' : 's'} added`);
+    if (errs.length) ask('Some files could not be imported', [{ type:'info', html:errs.map(esc).join('<br>') + '<br><br>For PDF files, copy the text into Paste text, or save the PDF as .txt or .docx first.' }]); },
+  async pasteSource(){ const r = await ask('Paste a source', [{ name:'name', label:'Name or pseudonym', value:'Participant ' + String(P.sources.length + 1).padStart(2, '0') }, { name:'type', label:'Type', type:'select', value:'Interview', options:SRC_TYPES }, { name:'text', label:'Text', type:'textarea', rows:12, ph:'Paste the transcript here' }], 'Add source');
+    if (!r || !r.text.trim()) return; addSource(r.name, r.text.replace(/\r\n?/g, '\n'), r.type); touch(); render(); },
+  openSource: t => { S.sourceId = t.dataset.id; S.segmentId = null; S.pending = null; if (S.view !== 'code') go('code'); else render(); },
+  async delSource(t){ const s = find(P.sources, t.dataset.id); const n = P.segments.filter(x => x.sourceId === s.id).length;
+    if (!await confirmBox(`Delete “${s.name}” and its ${n} coded excerpt${n === 1 ? '' : 's'}?`, 'Delete')) return;
+    const segIds = new Set(P.segments.filter(x => x.sourceId === s.id).map(x => x.id));
+    P.segments = P.segments.filter(x => !segIds.has(x.id)); P.links = P.links.filter(l => !segIds.has(l.targetId)); P.sources = P.sources.filter(x => x !== s);
+    log('Deleted source', s.name); touch(); render(); },
+  async attrKeys(){ const r = await ask('Participant attributes', [{ name:'keys', label:'Attribute names, one per line', type:'textarea', value:P.attrKeys.join('\n'), hint:'For example: Group, Site, Gender, Years teaching, Parish. Values are entered in the Sources table.' }], 'Save');
+    if (!r) return; P.attrKeys = [...new Set(r.keys.split('\n').map(x => x.trim()).filter(Boolean))].slice(0, 12); touch(); render(); },
+  pseudonymise: () => pseudonymise(),
+  chip: t => applyCode(t.dataset.code),
+  invivo(){ if (!S.pending) return; const t = find(P.sources, S.sourceId).text.slice(S.pending.start, S.pending.end).replace(/\s+/g, ' ');
+    const c = createCode('“' + clip(t, 50) + '”', { type:'In-vivo' }); applyCode(c.id); },
+  async newCodeDlg(){ const r = await ask('New code', [{ name:'name', label:'Code name', value:S.chipQ }, { name:'color', label:'Colour', type:'color', value:PALETTE[P.codes.length % PALETTE.length] }, { name:'themeId', label:'Theme', type:'select', value:'', options:[['', '— none yet —'], ...P.themes.map(t => [t.id, t.name])] }, { name:'type', label:'Type', type:'select', value:'Descriptive', options:CODE_TYPES }, { name:'description', label:'Definition', type:'textarea', rows:3 }], 'Create');
+    if (!r || !r.name.trim()) return; const c = createCode(r.name, { color:safeColor(r.color), themeId:r.themeId, type:r.type, description:r.description });
+    if (S.view === 'code' && (S.pending || S.segmentId)) applyCode(c.id); else render(); },
+  clearSel(){ S.pending = null; getSelection().removeAllRanges(); renderSide(); },
+  closeSeg(){ S.segmentId = null; renderTx(); renderSide(); },
+  segStep(t){ const ix = IX(); const segs = (ix.segBySrc[S.sourceId] || []).slice().sort((a, b) => a.start - b.start); if (!segs.length) return;
+    const i = segs.findIndex(s => s.id === S.segmentId); const d = +t.dataset.d; const n = d === 0 ? segs[0] : segs[Math.max(0, Math.min(segs.length - 1, i + d))];
+    S.segmentId = n.id; S.pending = null; renderTx(); renderSide(); const mk = $('#tx mark.on'); mk && mk.scrollIntoView({ block:'center', behavior:'smooth' }); },
+  async delSeg(t){ if (!await confirmBox('Delete this excerpt and its analysis notes? The transcript text is not affected.', 'Delete')) return;
+    const s = find(P.segments, t.dataset.id); P.segments = P.segments.filter(x => x !== s); P.links = P.links.filter(l => l.targetId !== s.id);
+    P.themes.forEach(th => { const w = P.writeup[th.id]; if (w) w.evidence = w.evidence.filter(e => e !== s.id); });
+    log('Deleted excerpt', clip(s.text, 60)); S.segmentId = null; touch(); renderTx(); renderSide(); renderSrcList(); },
+  async newTheme(){ const r = await ask('New theme', [{ name:'name', label:'Theme name', hint:'A theme is a pattern of shared meaning, not just a topic. A short phrase that captures the meaning works well.' }, { name:'color', label:'Colour', type:'color', value:PALETTE[(P.themes.length * 3 + 1) % PALETTE.length] }], 'Create');
+    if (!r || !r.name.trim()) return; P.themes.push({ id:uid('t'), name:r.name.trim(), color:safeColor(r.color), concept:'', narrative:'', status:'Candidate', created:now() }); log('Created theme', r.name); touch(); render(); },
+  async delTheme(t){ const th = find(P.themes, t.dataset.id); if (!await confirmBox(`Delete the theme “${th.name}”? Its codes and excerpts are kept and become unassigned.`, 'Delete')) return;
+    P.codes.forEach(c => { if (c.themeId === th.id) c.themeId = ''; }); P.themes = P.themes.filter(x => x !== th); P.links = P.links.filter(l => l.targetId !== th.id); delete P.writeup[th.id]; delete P.triangulation[th.id];
+    log('Deleted theme', th.name); touch(); render(); },
+  async mergeCode(t){ const c = find(P.codes, t.dataset.id); const others = P.codes.filter(x => x !== c); if (!others.length) return;
+    const r = await ask(`Merge “${c.name}” into another code`, [{ name:'into', label:'Merge into', type:'select', value:others[0].id, options:others.map(o => [o.id, o.name]) }, { type:'info', html:'All excerpts and literature links move to the chosen code, and this code is removed. The merge is recorded in the decision trail.' }], 'Merge');
+    if (!r) return; const into = find(P.codes, r.into);
+    P.segments.forEach(s => { if (s.codeIds.includes(c.id)) { s.codeIds = s.codeIds.filter(x => x !== c.id); if (!s.codeIds.includes(into.id)) s.codeIds.push(into.id); } });
+    P.links.forEach(l => { if (l.targetId === c.id) l.targetId = into.id; });
+    if (c.description && !into.description.includes(c.description)) into.description = (into.description + '\n' + c.description).trim();
+    P.codes = P.codes.filter(x => x !== c); log('Merged codes', `${c.name} → ${into.name}`); touch(); render(); },
+  async delCode(t){ const c = find(P.codes, t.dataset.id); const n = P.segments.filter(s => s.codeIds.includes(c.id)).length;
+    if (!await confirmBox(`Delete the code “${c.name}”? It is removed from ${n} excerpt${n === 1 ? '' : 's'}. Excerpts left with no code are kept so your notes are not lost.`, 'Delete')) return;
+    P.segments.forEach(s => s.codeIds = s.codeIds.filter(x => x !== c.id)); P.links = P.links.filter(l => l.targetId !== c.id); P.codes = P.codes.filter(x => x !== c); log('Deleted code', c.name); touch(); render(); },
+  retrieve(t){ S.ex.tab = 'retrieve'; S.ex.code = t.dataset.id; S.ex.source = ''; S.ex.type = ''; S.ex.attr = ''; S.ex.q = ''; S.ex.neg = false; go('explore'); },
+  goTri(t){ S.tri = t.dataset.id; go('triangulate'); },
+  async addLit(){ const r = await ask('Add a reference', [{ name:'authors', label:'Author(s)', hint:'Surname, Initials; separate authors with ;', ph:'Ertmer, P. A.' }, { name:'year', label:'Year' }, { name:'title', label:'Title' }, { name:'venue', label:'Journal / publisher' }, { name:'doi', label:'DOI or URL' }, { name:'concept', label:'Key concept or theory' }, { name:'notes', label:'Your notes', type:'textarea', rows:3 }], 'Add');
+    if (!r || !(r.authors || r.title).trim()) return; P.literature.push(Object.assign({ id:uid('l'), context:'' }, r)); log('Added reference', cite(r)); touch(); render(); },
+  async delLit(t){ const l = find(P.literature, t.dataset.id); if (!await confirmBox(`Delete ${cite(l)} and its connections?`, 'Delete')) return; P.literature = P.literature.filter(x => x !== l); P.links = P.links.filter(k => k.litId !== l.id); touch(); render(); },
+  async addLink(t){
+    if (!P.literature.length) { if (await confirmBox('Add a reference to your Literature library first. Go there now?', 'Go to Literature')) go('literature'); return; }
+    const fields = [];
+    if (!t.dataset.lit) fields.push({ name:'litId', label:'Reference', type:'select', value:P.literature[0].id, options:P.literature.map(l => [l.id, cite(l) + ' — ' + clip(l.title || '', 50)]) });
+    if (!t.dataset.tt) fields.push({ name:'target', label:'Connect to', type:'select', value:'', options:[...P.themes.map(x => ['theme:' + x.id, 'Theme: ' + x.name]), ...P.codes.map(x => ['code:' + x.id, 'Code: ' + x.name])] });
+    fields.push({ name:'relation', label:'Relationship', type:'select', value:'Supports', options:RELATIONS }, { name:'note', label:'How does it relate? (your words)', type:'textarea', rows:3 });
+    if (!t.dataset.tt && !P.themes.length && !P.codes.length) { toast('Create a code or theme first'); return; }
+    const r = await ask('Connect literature', fields, 'Connect'); if (!r) return;
+    let tt = t.dataset.tt, tid = t.dataset.tid; if (!tt) [tt, tid] = r.target.split(':');
+    const litId = t.dataset.lit || r.litId;
+    P.links.push({ id:uid('k'), litId, targetType:tt, targetId:tid, relation:r.relation, note:r.note }); log('Connected literature', `${cite(find(P.literature, litId))} ${r.relation.toLowerCase()} ${tt}`); touch();
+    if (S.view === 'code') renderSide(); else render(); },
+  delLink(t){ P.links = P.links.filter(l => l.id !== t.dataset.id); touch(); if (S.view === 'code') renderSide(); else render(); },
+  async importRis(){ const [f] = await pickFiles('.ris,text/plain', false); if (!f) return; const refs = parseRis(await f.text()); refs.forEach(r => P.literature.push(Object.assign({ id:uid('l') }, r))); log('Imported RIS', `${refs.length} references`); touch(); render(); toast(`${refs.length} references imported`); },
+  exportRis(){ download(fileSafe(P.name) + '-literature.ris', P.literature.map(l => ['TY  - JOUR', ...String(l.authors || '').split(';').map(a => a.trim()).filter(Boolean).map(a => 'AU  - ' + a), 'PY  - ' + (l.year || ''), 'TI  - ' + (l.title || ''), 'JO  - ' + (l.venue || ''), l.doi ? 'DO  - ' + l.doi : '', l.notes ? 'N1  - ' + l.notes.replace(/\n/g, ' ') : '', 'ER  - '].filter(Boolean).join('\r\n')).join('\r\n\r\n'), 'application/x-research-info-systems'); },
+  exTab: t => { S.ex.tab = t.dataset.t; S.ex.sel = null; render(); },
+  mxCell: t => { S.ex.sel = { r:t.dataset.r, c:t.dataset.c }; render(); const h = $$('#main h2').pop(); h && h.scrollIntoView({ behavior:'smooth' }); },
+  openSeg(t){ const s = find(P.segments, t.dataset.id); S.sourceId = s.sourceId; S.segmentId = s.id; S.pending = null; S.scrollSeg = true; go('code'); },
+  jump(t){ S.sourceId = t.dataset.id; S.segmentId = null; S.jump = { start:+t.dataset.s, end:+t.dataset.e }; go('code'); },
+  wordSearch: t => { S.ex.wq = t.dataset.w; render(); },
+  exportSegs(){ download(fileSafe(P.name) + '-excerpts.csv', segsCSV(filteredSegs(IX())), 'text/csv'); },
+  exportSegsAll(){ download(fileSafe(P.name) + '-excerpts.csv', segsCSV(P.segments), 'text/csv'); },
+  exportMatrix(){ const ix = IX(); const { rows, cols, cell } = matrixData(ix); download(fileSafe(P.name) + '-matrix.csv', toCSV([['', ...cols.map(c => c.label)], ...rows.map(r => [r.label, ...cols.map(c => cell(r, c).length)])]), 'text/csv'); },
+  exportCodebook(){ download(fileSafe(P.name) + '-codebook.doc', wordDoc(P.name + ' codebook', `<h1>${esc(P.name)}: Codebook</h1>` + codebookTable(IX())), 'application/msword'); },
+  exportCodebookCsv(){ const ix = IX(); download(fileSafe(P.name) + '-codebook.csv', toCSV([['Theme', 'Code', 'Type', 'Definition', 'Use when', 'Do not use when', 'Colour', 'Excerpts'], ...orderedCodes().map(c => [(ix.theme[c.themeId] || {}).name || '', c.name, c.type, c.description, c.include, c.exclude, c.color, (ix.segByCode[c.id] || []).length])]), 'text/csv'); },
+  exportReport(){ download(fileSafe(P.name) + '-analysis-report.doc', wordDoc(P.name, reportHtml()), 'application/msword'); },
+  exportFindings(){ download(fileSafe(P.name) + '-findings.doc', wordDoc(P.name + ' findings', findingsHtml()), 'application/msword'); },
+  exportFindingsMd(){ download(fileSafe(P.name) + '-findings.md', findingsMd(), 'text/markdown'); },
+  exportJournal(){ download(fileSafe(P.name) + '-journal.doc', wordDoc(P.name + ' journal', `<h1>${esc(P.name)}: Reflexive journal</h1>${P.journal.map(j => `<h2>${esc(j.title || j.type)}</h2><p class="m">${esc(j.type)} · ${new Date(j.date).toLocaleString()}</p><p>${esc(j.body).replace(/\n/g, '<br>')}</p>`).join('')}<h1>Decision trail</h1><table><tr><th>When</th><th>Action</th><th>Detail</th></tr>${P.log.map(l => `<tr><td>${new Date(l.t).toLocaleString()}</td><td>${esc(l.a)}</td><td>${esc(l.d)}</td></tr>`).join('')}</table>`), 'application/msword'); },
+  methodsDraft(){ P.methods = methodsDraft() + (P.methods ? '\n\n' + P.methods : ''); touch(); render(); },
+  addJournal(t){ P.journal.push({ id:uid('j'), type:t.dataset.t, title:'', body:'', date:now() }); touch(); render(); const ta = $('#main input[data-bind^="journal|"]'); ta && ta.focus(); },
+  async delJournal(t){ if (!await confirmBox('Delete this journal entry?', 'Delete')) return; P.journal = P.journal.filter(j => j.id !== t.dataset.id); touch(); render(); },
+  async delProject(){ if (!await confirmBox(`Delete “${P.name}” from this device? This cannot be undone. Download a backup first if you need it.`, 'Delete permanently')) return;
+    await DB.del(P.id); PROJECTS = PROJECTS.filter(p => p.id !== P.id); P = PROJECTS[0] || blankProject('My first project'); if (!PROJECTS.includes(P)) { PROJECTS.push(P); await save(); } S.view = 'guide'; render(); toast('Project deleted'); },
+  loadSample: () => loadSample(),
+  mapSvg(){ download(fileSafe(P.name) + '-thematic-map.svg', mapSvg().replace('<svg ', '<svg style="background:#fff;font-family:Arial" ').replace(/fill:var\(--ink\)/g, 'fill:#111'), 'image/svg+xml'); }
+};
+function addSource(name, text, type = 'Interview', attrs = {}){
+  const s = { id:uid('d'), name:(name || 'Source').trim(), type, text, attrs, created:now() }; P.sources.push(s); log('Added source', `${s.name} (${words(text)} words)`); return s;
+}
+async function importCsv(text, base){
+  const rows = parseCSV(text); if (rows.length < 2) throw new Error('the CSV needs a header row and at least one data row');
+  const head = rows[0].map(h => h.trim()); const body = rows.slice(1);
+  const avg = i => body.reduce((a, r) => a + (r[i] || '').length, 0) / body.length;
+  let ti = head.findIndex(h => /^(text|response|transcript|answer|comment|narrative)/i.test(h)); if (ti < 0) ti = head.map((_, i) => i).sort((a, b) => avg(b) - avg(a))[0];
+  let ni = head.findIndex(h => /^(id|participant|name|pseudonym|respondent)/i.test(h));
+  const r = await ask(`Import ${body.length} rows from ${base}.csv`, [{ name:'ti', label:'Column that contains the text', type:'select', value:String(ti), options:head.map((h, i) => [String(i), h || 'Column ' + (i + 1)]) }, { name:'ni', label:'Column that names each participant', type:'select', value:String(ni), options:[['-1', '(number the rows)'], ...head.map((h, i) => [String(i), h || 'Column ' + (i + 1)])] }, { name:'type', label:'Source type', type:'select', value:'Survey response', options:SRC_TYPES }, { type:'info', html:'Each row becomes one source. Other columns become participant attributes.' }], 'Import');
+  if (!r) return 0; ti = +r.ti; ni = +r.ni;
+  head.forEach((h, i) => { if (i !== ti && i !== ni && h && !P.attrKeys.includes(h) && P.attrKeys.length < 12) P.attrKeys.push(h); });
+  let n = 0; body.forEach((row, k) => { const t = (row[ti] || '').trim(); if (!t) return; const attrs = {}; head.forEach((h, i) => { if (i !== ti && i !== ni && h) attrs[h] = (row[i] || '').trim(); });
+    addSource(ni >= 0 ? row[ni] || `${base} ${k + 1}` : `${base} ${String(k + 1).padStart(3, '0')}`, t, r.type, attrs); n++; });
+  return n;
+}
+function parseRis(text){
+  const out = []; let cur = null;
+  text.split(/\r?\n/).forEach(line => { const m = line.match(/^([A-Z][A-Z0-9])  -\s?(.*)$/); if (!m) return; const [, tag, v] = m;
+    if (tag === 'TY') cur = { authors:'', year:'', title:'', venue:'', doi:'', concept:'', context:'', notes:'' };
+    else if (!cur) return;
+    else if (tag === 'ER') { out.push(cur); cur = null; }
+    else if (tag === 'AU' || tag === 'A1') cur.authors += (cur.authors ? '; ' : '') + v.trim();
+    else if (tag === 'PY' || tag === 'Y1' || tag === 'DA') cur.year = cur.year || (v.match(/\d{4}/) || [''])[0];
+    else if (tag === 'TI' || tag === 'T1') cur.title = v.trim();
+    else if (['JO', 'T2', 'JF', 'PB', 'BT'].includes(tag)) cur.venue = cur.venue || v.trim();
+    else if (tag === 'DO') cur.doi = v.trim();
+    else if (tag === 'N1' || tag === 'AB') cur.notes = (cur.notes + ' ' + v).trim().slice(0, 2000); });
+  return out;
+}
+async function pseudonymise(){
+  if (!P.sources.length) return toast('Add sources first');
+  const r = await ask('Pseudonymise names and places', [{ type:'info', html:'Replace identifying words across <b>all</b> sources, for example <code>Marcia Brown => T01</code>. Existing coding is preserved and adjusted. Check the results afterwards: pseudonymisation is not anonymisation.' },
+    { name:'pairs', label:'One replacement per line: original => replacement', type:'textarea', rows:8, ph:'Marcia Brown => T01\nMarcia => T01\nSt. Anne\'s Primary => School A' },
+    { name:'whole', label:'Whole words only', type:'checkbox', value:true }, { name:'cs', label:'Match case exactly', type:'checkbox', value:false }], 'Replace everywhere');
+  if (!r) return;
+  const pairs = r.pairs.split('\n').map(l => l.split('=>').map(x => x.trim())).filter(p => p.length === 2 && p[0]);
+  let total = 0;
+  for (const [from, to] of pairs) {
+    const re = new RegExp((r.whole ? '(?<![\\p{L}\\p{N}])' : '') + escRe(from) + (r.whole ? '(?![\\p{L}\\p{N}])' : ''), (r.cs ? 'g' : 'gi') + 'u');
+    for (const src of P.sources) {
+      const ms = []; let m; re.lastIndex = 0; while ((m = re.exec(src.text))) { ms.push([m.index, m[0].length]); if (!m[0].length) re.lastIndex++; }
+      if (ms.length) {
+        const map = (o, isEnd) => { let d = 0; for (const [i, L] of ms) { if (o >= i + L) d += to.length - L; else if (o > i) return i + d + (isEnd ? to.length : 0); else break; } return o + d; };
+        P.segments.filter(s => s.sourceId === src.id).forEach(s => { s.start = map(s.start, false); s.end = map(s.end, true); });
+        let out = '', last = 0; ms.forEach(([i, L]) => { out += src.text.slice(last, i) + to; last = i + L; }); src.text = out + src.text.slice(last);
+        P.segments.filter(s => s.sourceId === src.id).forEach(s => s.text = src.text.slice(s.start, s.end));
+        total += ms.length;
+      }
+      src.name = src.name.replace(re, to);
+    }
+    log('Pseudonymised', `“${from}” → “${to}”`);
+  }
+  touch(); render(); toast(`${total} replacement${total === 1 ? '' : 's'} made`);
+}
+
+/* ============================================================
+   Event wiring
+   ============================================================ */
+document.addEventListener('click', e => {
+  const mk = e.target.closest('mark.hl');
+  if (mk && S.view === 'code' && getSelection().isCollapsed) { const ids = mk.dataset.segs.split(','); const cur = ids.indexOf(S.segmentId);
+    S.segmentId = ids[(cur + 1) % ids.length]; S.pending = null; renderTx(); renderSide(); return; }
+  const t = e.target.closest('[data-act]'); if (!t) return;
+  if (t.tagName === 'A') e.preventDefault();
+  const fn = ACT[t.dataset.act]; if (fn) fn(t, e);
+});
+function setPath(obj, path, val){ const ks = path.split('.'); let o = obj; ks.slice(0, -1).forEach(k => { o = o[k] ||= {}; }); o[ks[ks.length - 1]] = val; }
+function bindTarget(kind, id){
+  if (kind === 'project') return P;
+  if (kind === 'tri') return P.triangulation[id] ||= { rows:{}, types:{}, interpretation:'' };
+  if (kind === 'write') return P.writeup[id] ||= { claim:'', evidence:[], literature:'', alternatives:'', finding:'' };
+  return find(P[kind] || [], id);
+}
+function onBind(el){
+  const [kind, id, field] = el.dataset.bind.split('|'); const obj = bindTarget(kind, id); if (!obj) return;
+  const val = el.type === 'checkbox' ? el.checked : el.value;
+  if (kind === 'codes' && field === 'name' && !val.trim()) return;
+  setPath(obj, field, field === 'color' ? safeColor(val) : val);
+  if (kind === 'codes' && field === 'themeId') { const th = find(P.themes, val); log('Moved code', `${obj.name} → ${th ? th.name : 'no theme'}`); }
+  if (kind === 'project' && field === 'methodology') log('Changed approach', METHODS[val].name);
+  touch();
+  if (el.dataset.rr === '1') render(); else if (el.dataset.rr === 'nav') renderProjSel();
+  if (kind === 'segments' && field === 'negative') renderSrcList();
+}
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (el.dataset.bind && !(el.type === 'checkbox' || el.tagName === 'SELECT')) onBind(el);
+  if (el.id === 'srcQ') { S.srcQ = el.value; renderSrcList(); }
+  if (el.id === 'chipQ') { S.chipQ = el.value; const box = $('#chips'); const seg = find(P.segments, S.segmentId); box.innerHTML = chipsHtml(S.pending ? [] : seg ? seg.codeIds : [], !!S.pending); }
+});
+document.addEventListener('change', e => {
+  const el = e.target;
+  if (el.dataset.bind && (el.type === 'checkbox' || el.tagName === 'SELECT')) onBind(el);
+  if (el.dataset.step) { P.steps[el.dataset.step] = el.checked; touch(); }
+  if (el.dataset.exf) { const k = el.dataset.exf; S.ex[k] = el.type === 'checkbox' ? el.checked : el.value; S.ex.sel = null; render(); const again = $(`[data-exf="${k}"]`); if (again && el.type === 'search') { again.focus(); again.setSelectionRange(again.value.length, again.value.length); } }
+  if (el.dataset.actChange === 'triSel') { S.tri = el.value; render(); }
+  if (el.dataset.actChange === 'journalType') { S.journalType = el.value; render(); }
+  if (el.dataset.wev) { const w = P.writeup[el.dataset.wev] ||= { claim:'', evidence:[], literature:'', alternatives:'', finding:'' }; w.evidence = w.evidence.filter(x => x !== el.value); if (el.checked) w.evidence.push(el.value); touch(); }
+  if (el.id === 'projSel') { if (el.value === '__manage') { el.value = P.id; manageProjects(); return; } P = PROJECTS.find(p => p.id === el.value); LS.set('cqrl:last', P.id); S.sourceId = null; S.segmentId = null; S.pending = null; render(); }
+});
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); save(); toast('Saved on this device. Use Save backup to keep a copy elsewhere.'); return; }
+  const el = e.target;
+  if (el.id === 'chipQ' && e.key === 'Enter') { e.preventDefault(); const q = el.value.trim(); if (!q) return;
+    const ex = P.codes.find(c => c.name.toLowerCase() === q.toLowerCase()) || P.codes.find(c => c.name.toLowerCase().includes(q.toLowerCase()));
+    const c = ex || createCode(q); if (S.pending || S.segmentId) { if (!S.pending && find(P.segments, S.segmentId).codeIds.includes(c.id)) { S.chipQ = ''; renderSide(); return; } applyCode(c.id); } return; }
+  if (el.dataset && el.dataset.exf && e.key === 'Enter') { S.ex[el.dataset.exf] = el.value; render(); const again = $(`[data-exf="${el.dataset.exf}"]`); again && again.focus(); return; }
+  if (S.view === 'code' && S.pending && /^[1-9]$/.test(e.key) && !/INPUT|TEXTAREA|SELECT/.test(el.tagName)) { const c = orderedCodes()[+e.key - 1]; if (c) { e.preventDefault(); applyCode(c.id); } }
+});
+async function manageProjects(){
+  const r = await ask('Projects on this device', [{ type:'info', html:PROJECTS.map(p => `<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:6px 0"><span><b>${esc(p.name)}</b><br><span class="muted">${p.sources.length} sources · ${p.segments.length} excerpts · updated ${new Date(p.updated).toLocaleString()}</span></span></div>`).join('') + '<p>To delete a project, open it and use About &amp; licence → Delete this project.</p>' }], 'Close');
+}
+
+/* ============================================================
+   Practice study (fictional data for learning)
+   ============================================================ */
+function loadSample(){
+  const p = blankProject('Practice: Teachers and classroom technology');
+  p.researchQuestions = 'How do primary and secondary teachers in rural and urban Caribbean schools experience integrating digital technology into their teaching?';
+  p.description = 'FICTIONAL PRACTICE DATA. Three teacher interviews, one principal interview, one lesson observation and one school policy extract. No real people or schools are represented.';
+  p.attrKeys = ['Role', 'Site', 'Level'];
+  const T = [
+    ['T01 — Teacher, rural primary', 'Interview', { Role:'Teacher', Site:'Rural', Level:'Primary' }, `Interviewer: Tell me about using technology in your classroom.
+T01: Sometimes I want to use technology in my classroom, but the internet is unreliable, and I have never received proper training. We had one workshop two years ago and it was about how to log in to the email.
+Interviewer: What happens when you plan a digital lesson?
+T01: I always plan a backup. I print the worksheet the night before, because nine times out of ten the network drops in the middle. The children get so excited when they see the tablets come out. Their faces light up. But some of them don't have any device at home, so homework online is not fair to them.
+Interviewer: Who supports you?
+T01: Honestly, I learn from YouTube and from the younger teacher next door. She shows me things at lunch time.`],
+    ['T02 — Teacher, urban secondary', 'Interview', { Role:'Teacher', Site:'Urban', Level:'Secondary' }, `Interviewer: How has technology changed your teaching?
+T02: Mi try use the projector, but the light gone half the time, so mi just go back to the chalk. It nuh worth it fi stress.
+Interviewer: Does the school provide training?
+T02: They send us a link to an online course, but when you reach home after a long day, you not going to sit down and do that. We need somebody to come in and show us with our own lessons.
+Interviewer: And the students?
+T02: The students know more than me about phones. They teach me shortcuts. That is a nice thing, it turn around the classroom a bit. But the phones are a distraction too, so I have mixed feelings.`],
+    ['T03 — Teacher, rural secondary', 'Interview', { Role:'Teacher', Site:'Rural', Level:'Secondary' }, `Interviewer: Tell me about connectivity at your school.
+T03: To be fair, our connection has been fine this year since they put in the new router. I don't think internet is the problem for me. The problem is time. Thirty-eight students, one tablet cart for the whole school, and you have to book it two weeks ahead.
+Interviewer: What would help?
+T03: More devices, and planning time. Training would be nice, but I taught myself most of what I know.`],
+    ['P01 — Principal, rural primary', 'Interview', { Role:'Principal', Site:'Rural', Level:'Primary' }, `Interviewer: How would you describe technology use in your school?
+P01: We are well resourced. The technology plan provides broadband for every classroom, and we received thirty tablets from the ministry. The equipment is there. What I need is for teachers to take the initiative and use it.
+Interviewer: What about training?
+P01: Training was offered. Not everyone attended. I think some teachers are comfortable with the old ways.`],
+    ['OBS1 — Lesson observation, rural primary', 'Observation', { Role:'Observation', Site:'Rural', Level:'Primary' }, `09:05 Teacher introduces a mathematics game on tablets. Students are visibly excited; several cheer.
+09:12 Network drops. Game will not load on 6 of 10 tablets. Teacher asks students to share in groups of four.
+09:20 Network drops a second time. Teacher distributes the printed worksheet and continues the lesson on paper.
+09:35 Two students ask if they can play the game at home. One says "We don't have no tablet at home, miss."
+Observer note: the teacher switched approach calmly and without visible frustration, which suggests this is routine.`],
+    ['DOC1 — School ICT plan extract', 'Document', { Role:'Document', Site:'Rural', Level:'Primary' }, `Section 3. Infrastructure. All classrooms will have reliable broadband access by September. Thirty tablets have been allocated for student use.
+Section 4. Professional development. Teachers are expected to complete the online ICT module during the academic year. Completion will be monitored by the principal.`]];
+  const src = T.map(([n, ty, a, tx]) => ({ id:uid('d'), name:n, type:ty, attrs:a, text:tx, created:now() })); p.sources = src;
+  const th = [['Structural constraints on technology integration', '#457b9d', 'Infrastructure, devices and time shape what teachers can do, regardless of willingness.'], ['Teachers improvising around gaps', '#e76f51', ''], ['Students as motivated, unequal participants', '#2a9d8f', '']]
+    .map(([n, c, k]) => ({ id:uid('t'), name:n, color:c, concept:k, narrative:'', status:'Candidate', created:now() })); p.themes = th;
+  const cd = [['Infrastructure barriers', 0, 'Unreliable internet, electricity or equipment that prevents planned technology use.'], ['Professional development needs', 0, 'Statements about the absence, form or usefulness of training.'], ['Time and access to devices', 0, ''], ['Backup planning', 1, 'Teachers preparing non-digital alternatives in expectation of failure.'], ['Self-directed learning', 1, ''], ['Learner excitement', 2, ''], ['Device inequality at home', 2, ''], ['Leadership expectations', -1, 'How school leaders describe teachers’ responsibility for technology use.']]
+    .map(([n, ti, d], i) => ({ id:uid('c'), name:n, color:PALETTE[[3, 1, 6, 9, 4, 0, 7, 5][i]], description:d, include:'', exclude:'', type:'Descriptive', themeId:ti >= 0 ? th[ti].id : '', created:now() })); p.codes = cd;
+  const seg = (si, phrase, codes, extra = {}) => { const i = src[si].text.indexOf(phrase); if (i < 0) return null; const s = Object.assign({ id:uid('s'), sourceId:src[si].id, start:i, end:i + phrase.length, text:phrase, codeIds:codes.map(c => cd[c].id), created:now() }, extra); p.segments.push(s); return s; };
+  const s1 = seg(0, 'the internet is unreliable, and I have never received proper training', [0, 1], { rationale:'Two distinct barriers named together: infrastructure and training.', inference:'For this teacher, willingness is present ("I want to"), so barriers are external rather than attitudinal.', interpretation:'Supports reading technology integration as structurally constrained, not a matter of teacher motivation.', triangulation:'Observation OBS1 shows the network dropping twice in a lesson. The principal and ICT plan claim reliable broadband: divergence to explore.' });
+  seg(0, 'I always plan a backup. I print the worksheet the night before', [3]);
+  seg(0, 'The children get so excited when they see the tablets come out', [5]);
+  seg(0, "some of them don't have any device at home, so homework online is not fair to them", [6]);
+  seg(0, 'I learn from YouTube and from the younger teacher next door', [4, 1]);
+  seg(1, 'Mi try use the projector, but the light gone half the time, so mi just go back to the chalk', [0, 3], { languageNote:'Jamaican Creole. Gloss: "I try to use the projector, but the electricity is off half the time, so I just go back to the chalk." "Light" here means electricity supply.', inference:'Repeated failure appears to lead to giving up, not only backing up.' });
+  seg(1, 'We need somebody to come in and show us with our own lessons', [1], { interpretation:'Asks for embedded, practice-based support rather than self-paced online modules.' });
+  seg(1, 'The students know more than me about phones', [5]);
+  seg(2, "our connection has been fine this year since they put in the new router. I don't think internet is the problem for me", [0], { negative:true, inference:'Infrastructure is not uniformly a barrier; where it was fixed, the constraint shifts to devices and time.' });
+  seg(2, 'one tablet cart for the whole school, and you have to book it two weeks ahead', [2]);
+  seg(2, 'I taught myself most of what I know', [4]);
+  seg(3, 'The technology plan provides broadband for every classroom', [7, 0], { triangulation:'Contradicted by T01 and by the observation at the same site.' });
+  seg(3, 'What I need is for teachers to take the initiative and use it', [7]);
+  seg(4, 'Network drops. Game will not load on 6 of 10 tablets', [0]);
+  seg(4, 'Teacher distributes the printed worksheet and continues the lesson on paper', [3]);
+  seg(4, "We don't have no tablet at home, miss.", [6]);
+  seg(5, 'All classrooms will have reliable broadband access by September', [0, 7]);
+  seg(5, 'Teachers are expected to complete the online ICT module', [1, 7]);
+  p.literature = [{ id:uid('l'), authors:'Ertmer, P. A.', year:'1999', title:'Addressing first- and second-order barriers to change: Strategies for technology integration', venue:'Educational Technology Research and Development, 47(4), 47–61', doi:'10.1007/BF02299597', concept:'First-order (external) and second-order (belief) barriers', context:'United States; conceptual', notes:'Practice entry: check the original article before you cite it.' }];
+  p.links = [{ id:uid('k'), litId:p.literature[0].id, targetType:'code', targetId:cd[0].id, relation:'Supports', note:'Unreliable internet and power are first-order barriers in Ertmer’s terms.' },
+    { id:uid('k'), litId:p.literature[0].id, targetType:'code', targetId:cd[7].id, relation:'Contradicts', note:'The principal frames the problem as teacher beliefs (second-order), while teachers and observation point to first-order barriers.' }];
+  if (s1) p.links.push({ id:uid('k'), litId:p.literature[0].id, targetType:'segment', targetId:s1.id, relation:'Supports', note:'' });
+  p.journal = [{ id:uid('j'), type:'Reflexive note', title:'My starting assumptions', body:'I taught in a rural school, so I expect infrastructure to be the main barrier. I need to watch for evidence that challenges this, such as T03.', date:now() }];
+  p.log = [{ t:now(), a:'Loaded practice study', d:'Fictional data' }];
+  PROJECTS.push(p); P = p; save(); S.view = 'guide'; S.sourceId = null; S.segmentId = null; render(); toast('Practice study loaded. Open Code to explore it.');
+}
+
+/* ============================================================
+   Extension seam (for institutional / commercial modules)
+   ============================================================ */
+window.CQRL = Object.freeze({
+  version: APP.version,
+  getProject: () => JSON.parse(JSON.stringify(P)),
+  registerView(id, label, renderFn){ if (V[id]) return false; V[id] = () => renderFn(JSON.parse(JSON.stringify(P))); VIEWS.splice(VIEWS.length - 1, 0, [id, label, '']); renderNav(); return true; }
+});
+
+/* ============================================================
+   Boot
+   ============================================================ */
+(async function boot(){
+  $('#edition').textContent = APP.edition + (CFG.course ? ' · ' + CFG.course : '');
+  await DB.open();
+  if (!DB.ok) $('#banner').innerHTML = '<div class="banner">This browser is blocking local storage (private window or school settings). Your work will be lost when you close this tab unless you click <b>Save backup</b>.</div>';
+  PROJECTS = (await DB.all()).map(normalize).sort((a, b) => b.updated.localeCompare(a.updated));
+  const last = LS.get('cqrl:last');
+  P = PROJECTS.find(p => p.id === last) || PROJECTS[0];
+  if (!P) { P = blankProject('My first project'); PROJECTS.push(P); await save(); }
+  setStatus(DB.ok ? 'Saved on this device' : 'Not saved: use Save backup', !DB.ok);
+  render();
+})();
+window.addEventListener('beforeunload', e => { if (!DB.ok && P && P.sources.length) { e.preventDefault(); e.returnValue = ''; } });
+</script>
+</body>
+</html>
