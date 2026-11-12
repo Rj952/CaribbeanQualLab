@@ -38,9 +38,8 @@ See [MOODLE.md](MOODLE.md). In short: add it as a **File** or **URL** resource t
 ## Licence and ownership
 
 - **Community Edition:** [GNU AGPL-3.0-or-later](LICENSE). It is free to use, study, share and modify. Anyone who distributes it or offers it as a network service must share their source code under the same licence.
-- **Commercial licence:** institutions and companies that need other terms (proprietary modifications, hosting without source disclosure, white-labelling, LMS integration, support) can obtain one from the copyright holder. See [COMMERCIAL-LICENSE.md](COMMERCIAL-LICENSE.md).
 - **Trademarks:** the name and logo are reserved. See [TRADEMARKS.md](TRADEMARKS.md).
-- **Contributions** require a signed [Contributor Licence Agreement](CLA.md), so that the project can continue to be offered under both licences.
+- **Contributions** require a signed [Contributor Licence Agreement](CLA.md), so that the copyright holder keeps full rights to the project.
 - **Creative rights:** the framework, design and software are the original work of Dr. Rohan Jowallah. The licence requires every copy and every fork to keep the attribution “Created by Dr. Rohan Jowallah”. See [CREATIVE-RIGHTS.md](CREATIVE-RIGHTS.md).
 - Users' research data and analyses belong to them, not to the software's author.
 
@@ -48,7 +47,7 @@ Copyright © 2026 Dr. Rohan Jowallah.
 
 ## Copyright and creative works
 
-**© 2026 Dr. Rohan Jowallah. All rights reserved, except as granted by the licences below.**
+**© 2026 Dr. Rohan Jowallah. All rights reserved, except as granted by the licence.**
 
 The following are original creative works of **Dr. Rohan Jowallah**:
 

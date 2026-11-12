@@ -6,7 +6,6 @@
   ADDITIONAL TERMS (AGPL-3.0 section 7(b)): every copy or modified version must preserve the attribution
   "Created by Dr. Rohan Jowallah", both in the visible user interface (navigation and About screen) and in this
   notice. See NOTICE and CREATIVE-RIGHTS.md.
-  Commercial licences are available from the copyright holder — see COMMERCIAL-LICENSE.md.
   "Caribbean Qualitative Research Lab" and "CQRL" are trademarks of the copyright holder — see TRADEMARKS.md.
 -->
 <html lang="en">
@@ -501,7 +500,7 @@ function render(){
 }
 function go(v){ S.view = v; S.ex.sel = null; render(); window.scrollTo(0, 0); }
 
-const footer = () => `<footer class="foot" role="contentinfo"><b>© 2026 ${APP.author}. All rights reserved.</b> The ${APP.name}™, its seven-stage analytical journey, analytical-defence method, Caribbean design, guidance, practice study and documentation are original creative works of ${APP.author}.<br>Community Edition licensed under ${APP.license}, with the attribution “Created by ${APP.author}” required in every copy. Commercial licences are available. <a href="#" data-act="go" data-v="about">Licence and creative rights</a></footer>`;
+const footer = () => `<footer class="foot" role="contentinfo"><b>© 2026 ${APP.author}. All rights reserved.</b> The ${APP.name}™, its seven-stage analytical journey, analytical-defence method, Caribbean design, guidance, practice study and documentation are original creative works of ${APP.author}.<br>Community Edition licensed under ${APP.license}, with the attribution “Created by ${APP.author}” required in every copy. <a href="#" data-act="go" data-v="about">Licence and creative rights</a></footer>`;
 const journey = () => `<div class="journey" aria-label="Analytical journey">${[['sources','Evidence','ocean'],['code','Coding','hibiscus'],['literature','Literature','palm'],['code','Inference','mango'],['themes','Interpretation','bougain'],['triangulate','Triangulation','sunset'],['write','Write-up','indigo']].map(([v, l, c], i) => `${i ? '<span aria-hidden="true">➜</span>' : ''}<button style="--jc:var(--c-${c})" data-act="go" data-v="${v}">${i + 1}. ${l}</button>`).join('')}</div>`;
 
 /* ============================================================
@@ -1017,7 +1016,7 @@ function segsCSV(list){
 /* ---------- About ---------- */
 V.about = () => `<h1>About and licence</h1>
   <div class="grid2"><div class="card"><h2 style="margin-top:0">${APP.name}</h2><div class="kv"><span class="muted">Created by</span><span><b>${APP.author}</b></span><span class="muted">Edition</span><span>${APP.edition}</span><span class="muted">Version</span><span>${APP.version}</span><span class="muted">Licence</span><span>${APP.license}</span><span class="muted">Copyright</span><span>${APP.copyright}</span>${CFG.institution ? `<span class="muted">Institution</span><span>${esc(CFG.institution)}</span>` : ''}${CFG.course ? `<span class="muted">Course</span><span>${esc(CFG.course)}</span>` : ''}</div>
-    <p>This Community Edition is free software: you may use, study, share and modify it under the GNU Affero General Public License v3 or later. It comes with no warranty. Institutions that need different licence terms, hosting, LMS integration or support can obtain a commercial licence from the copyright holder.</p>
+    <p>This Community Edition is free software: you may use, study, share and modify it under the GNU Affero General Public License v3 or later. It comes with no warranty.</p>
     <h3>Creative rights</h3><p>The Caribbean Qualitative Research Lab was conceived, designed and created by <b>${APP.author}</b>. That includes the seven-stage analytical journey (Evidence → Coding → Literature → Inference → Interpretation → Triangulation → Write-up), the analytical-defence approach, the interface design, the guidance and practice materials, and the documentation. ${APP.author} asserts the moral right to be identified as the creator of this work. Under the licence’s additional terms, the attribution “Created by ${APP.author}” must be kept in every copy and every modified version.</p>
     <p class="hint">“Caribbean Qualitative Research Lab” and “CQRL” are trademarks of the copyright holder. Your research data and your analysis belong to you, not to the software’s author.</p></div>
   <div class="card"><h2 style="margin-top:0">Privacy</h2><ul style="padding-left:18px"><li>No AI. No account. No analytics. No network requests.</li><li>Projects are stored in this browser on this device (${DB.ok ? 'browser storage is working' : '<b style="color:var(--danger)">browser storage is blocked: use Save backup</b>'}).</li><li>Anyone who uses this browser profile can open your projects. On a shared computer, download a backup and use <b>Delete project</b> when you finish.</li><li>Backups are not encrypted. Store them as your ethics approval requires.</li></ul>

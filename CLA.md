@@ -2,7 +2,7 @@
 
 Thank you for contributing to the Caribbean Qualitative Research Lab (“the Project”), maintained by Dr. Rohan Jowallah (“the Maintainer”).
 
-The Project is offered under the GNU AGPL-3.0-or-later and under separate commercial licences. To keep both possible, the Maintainer needs the right to license contributions under both. By submitting a contribution (a pull request, patch, translation, documentation or other material) you agree to the following.
+The Project is offered under the GNU AGPL-3.0-or-later. The Maintainer needs the right to license contributions under the AGPL and under any other terms the Maintainer chooses in future. By submitting a contribution (a pull request, patch, translation, documentation or other material) you agree to the following.
 
 1. **Definitions.** A “Contribution” is any original work of authorship that you intentionally submit to the Project.
 

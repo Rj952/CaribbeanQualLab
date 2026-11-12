@@ -30,5 +30,5 @@ The **core research workflow stays free** for students: coding, literature, infe
 - [ ] Register the name and logo with JIPO (Jamaica Intellectual Property Office) and, later, in key markets
 - [ ] Decide whether to hold IP personally or in a company, and assign it formally if a company is formed
 - [ ] Written IP assignment from any paid developers or contractors
-- [ ] Legal review of the CLA and commercial licence template by a Jamaican IP lawyer
+- [ ] Legal review of the CLA and any future licence terms by a Jamaican IP lawyer
 - [ ] Pilot with a postgraduate cohort, using fictional or approved data, before institutional sales

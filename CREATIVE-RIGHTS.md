@@ -10,7 +10,7 @@
 - **The guidance, practice study and documentation** in this repository.
 
 ## Rights asserted
-1. **Copyright.** Copyright © 2026 Dr. Rohan Jowallah. The work is released under the GNU AGPL-3.0-or-later and is also available under commercial licences ([COMMERCIAL-LICENSE.md](COMMERCIAL-LICENSE.md)).
+1. **Copyright.** Copyright © 2026 Dr. Rohan Jowallah. The work is released under the GNU AGPL-3.0-or-later.
 2. **Moral rights.** Dr. Rohan Jowallah asserts the moral right to be identified as the author and creator of this work, and the right to object to derogatory treatment of it, under the Copyright Act of Jamaica and the Berne Convention.
 3. **Attribution required by licence.** Under **AGPL-3.0 section 7(b)**, this work carries an additional term. Every copy and every modified version must preserve the attribution **“Created by Dr. Rohan Jowallah”**:
    - in the visible user interface (the navigation bar and the About screen);
