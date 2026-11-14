@@ -22,6 +22,7 @@ CQRL is one HTML file. It runs in any modern browser on Windows, macOS, ChromeOS
 | **6. Triangulation** | For each theme, evidence grouped by source type, with convergent, complementary, divergent and silent patterns. Comparison by participant group. Types of triangulation (Denzin; Patton). A triangulated interpretation field. |
 | **7. Write-up** | Structured findings for each theme: claim, chosen evidence, literature, alternatives and finding. Exported to Word or Markdown with an APA-style reference list. |
 | **Tools** | Retrieval with filters. Case-by-code and group-by-theme matrices. Word search with code-in-context. Word frequency. Reflexive journal. Automatic decision trail (audit trail). |
+| **Learn coding first** | A 15–20 minute bridging lesson before students code: quotation → code → category → theme, why a theme is not simply a bigger category, sorting practice with feedback, the four analytical questions, a “do these codes belong together?” check that requires students to explain their reasoning, and a readiness checklist. Lecturers can require it (`?learn=require`). |
 | **Guidance** | Six methodological pathways, each with phases, checklists and prompts: reflexive thematic analysis, framework analysis, qualitative content analysis, grounded theory, narrative analysis and IPA. A progress dashboard tracks the student's work. |
 | **Caribbean context** | Built for low bandwidth (≈140 KB, no external files). Language notes keep Jamaican Creole and other Caribbean varieties in participants' own words and record glosses separately. Fictional Caribbean practice study included. |
 
@@ -57,7 +58,7 @@ The following are original creative works of **Dr. Rohan Jowallah**:
 | **The seven-stage analytical journey** | Evidence → Coding → Literature → Inference → Interpretation → Triangulation → Write-up |
 | **The analytical-defence method** | Justifying each code, then recording inference, interpretation and triangulation as separate, traceable steps |
 | **Caribbean language-preservation design** | Participants' words (including Jamaican Creole) are never altered, and glosses are kept separately |
-| **Guidance and learning materials** | Method pathways, prompts, the fictional Caribbean practice study and all documentation |
+| **Guidance and learning materials** | The *Learn coding first* bridging lesson, method pathways, prompts, the fictional Caribbean practice study and all documentation |
 
 Dr. Rohan Jowallah asserts the moral right to be identified as the creator of these works. Every copy and every modified version must keep the attribution **“Created by Dr. Rohan Jowallah”** (an AGPL-3.0 section 7(b) additional term; see [NOTICE](NOTICE) and [CREATIVE-RIGHTS.md](CREATIVE-RIGHTS.md)).
 

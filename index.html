@@ -137,6 +137,18 @@ blockquote{margin:6px 0;padding:9px 12px;border-left:5px solid var(--c-hibiscus)
 .step>div{flex:1;min-width:0}
 
 /* ---------- journey, boards, misc ---------- */
+.lsteps{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+.lsteps button{border:2px solid var(--sec);background:var(--panel);color:var(--ink);border-radius:999px;padding:5px 12px 5px 5px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px}
+.lsteps button span{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:color-mix(in srgb,var(--sec) 18%,var(--panel));font-size:12px}
+.lsteps button.on{background:var(--sec);color:var(--on)}.lsteps button.on span{background:var(--panel);color:var(--sec)}
+.ladder{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin:10px 0}
+.ladder .arr{align-self:center;color:var(--muted);font-size:20px}
+.rung{flex:1 1 170px;border:2px solid var(--rc);border-top-width:8px;border-radius:14px;padding:10px;background:var(--panel)}
+.rung b{color:var(--rc);font-size:15px}.rung .q{font-size:12.5px;font-style:italic;margin:4px 0}.rung p{margin:6px 0;font-size:13.5px}
+.rung .ex{font-size:13px;background:var(--soft);border-radius:8px;padding:5px 8px}
+.lq{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0}
+.fb{margin-top:8px;padding:8px 10px;border-radius:10px;background:var(--soft);border-left:5px solid var(--warn);font-size:13.5px}.fb.ok{border-left-color:var(--ok)}
+ol.fq{padding-left:20px}ol.fq li{margin:6px 0}
 .journey{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:4px 0 18px}
 .journey button{border:0;background:var(--jc);color:var(--on);border-radius:999px;padding:6px 14px;cursor:pointer;font-weight:700;box-shadow:0 3px 0 color-mix(in srgb,var(--jc) 55%,#000)}
 .journey button:hover{transform:translateY(-1px)}
@@ -196,11 +208,12 @@ const APP = { name:'Caribbean Qualitative Research Lab', short:'CQRL', version:'
   license:'GNU AGPL-3.0-or-later', author:'Dr. Rohan Jowallah', copyright:'Copyright © 2026 Dr. Rohan Jowallah',
   repo:'https://github.com/Rj952/CaribbeanQualLab', site:'https://rj952.github.io/CaribbeanQualLab/' };
 const urlP = new URLSearchParams(location.search);
-const CFG = Object.assign({ institution:'', course:'', method:'', hide:[] }, window.CQRL_CONFIG || {});
+const CFG = Object.assign({ institution:'', course:'', method:'', hide:[], learn:'' }, window.CQRL_CONFIG || {});
 if (urlP.get('course')) CFG.course = urlP.get('course');
 if (urlP.get('institution')) CFG.institution = urlP.get('institution');
 if (urlP.get('method')) CFG.method = urlP.get('method');
 if (urlP.get('hide')) CFG.hide = urlP.get('hide').split(',');
+if (urlP.get('learn')) CFG.learn = urlP.get('learn');
 
 const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
@@ -319,9 +332,10 @@ const S = { view:'guide', sourceId:null, segmentId:null, pending:null, srcQ:'', 
 
 function normalize(p){
   const d = { schema:1, name:'Untitled project', created:now(), updated:now(), methodology: CFG.method || 'rta', description:'', researchQuestions:'',
-    positionality:'', sources:[], codes:[], themes:[], segments:[], literature:[], links:[], triangulation:{}, journal:[], writeup:{}, methods:'', steps:{}, attrKeys:['Group','Site'], log:[] };
+    positionality:'', sources:[], codes:[], themes:[], segments:[], literature:[], links:[], triangulation:{}, journal:[], writeup:{}, methods:'', steps:{}, attrKeys:['Group','Site'], log:[], learn:null };
   for (const k in d) if (p[k] === undefined || p[k] === null) p[k] = d[k];
   if (!METHODS[p.methodology]) p.methodology = 'rta';
+  p.learn = Object.assign({ step:0, sort:{}, sortChecked:false, explain:'', fq:{}, fqShown:false, pairs:{}, pairWhy:{}, pairShown:{}, ready:{}, done:false, doneAt:'' }, p.learn || {});
   p.sources.forEach(s => { s.attrs = s.attrs || {}; s.type = s.type || 'Interview'; s.text = String(s.text || ''); });
   p.segments.forEach(s => { s.codeIds = s.codeIds || []; s.links = s.links || []; });
   p.codes.forEach(c => { c.color = safeColor(c.color); });
@@ -471,12 +485,13 @@ function wordDoc(title, body){
 /* ============================================================
    Rendering shell
    ============================================================ */
-const VIEWS = [
-  ['guide','Guide & progress','★','sea'], ['sources','Sources','1','ocean'], ['code','Code','2','hibiscus'], ['codebook','Codebook','2','hibiscus'], ['literature','Literature','3','palm'],
+const VIEWS_ALL = [
+  ['guide','Guide & progress','★','sea'], ['learn','Learn coding first','0','mango'], ['sources','Sources','1','ocean'], ['code','Code','2','hibiscus'], ['codebook','Codebook','2','hibiscus'], ['literature','Literature','3','palm'],
   ['themes','Themes & map','4·5','bougain'], ['triangulate','Triangulation','6','sunset'], ['explore','Retrieve & matrix','◎','indigo'], ['journal','Journal','✎','mahogany'],
   ['write','Write-up','7','mango'], ['export','Export','↓','ocean'], ['about','About & licence','©','night']
 ];
-const secOf = v => (VIEWS.find(x => x[0] === v) || [])[3] || 'sea';
+const VIEWS = VIEWS_ALL.filter(v => v[0] !== 'learn' || (CFG.learn !== 'off'));
+const secOf = v => (VIEWS_ALL.find(x => x[0] === v) || [])[3] || 'sea';
 function renderNav(){
   const vis = VIEWS.filter(v => !CFG.hide.includes(v[0]));
   $('#nav').innerHTML = `<div class="cap">Research journey</div>` + vis.map(([id, label, n], i) =>
@@ -522,6 +537,7 @@ V.guide = () => {
   return `<h1>${esc(P.name)}</h1>
   <p class="lead">Move from what participants said to a defensible finding: code the evidence, connect it to literature, infer, interpret, triangulate, then write up. Everything stays on this device. No AI is used and nothing is uploaded.</p>
   ${journey()}
+  ${learnOn() && !learnDone() ? `<div class="card" style="margin-bottom:14px;--sec:var(--c-mango)"><b>New to coding?</b> Start with a short lesson (about 15–20 minutes) on the difference between a quotation, a code, a category and a theme. It makes the rest of the Lab much easier.<div class="row" style="margin-top:8px"><button class="btn primary" data-act="go" data-v="learn">Learn coding first</button></div></div>` : ''}
   ${!P.sources.length ? `<div class="card" style="margin-bottom:14px"><b>New here?</b> Load a short fictional practice study (teachers and classroom technology in the Caribbean) to learn the workflow, or go to <a href="#" data-act="go" data-v="sources">Sources</a> to add your own transcripts.<div class="row" style="margin-top:8px"><button class="btn primary" data-act="loadSample">Load practice study</button></div></div>` : ''}
   <div class="grid2">
     <div class="card">
@@ -553,6 +569,112 @@ V.guide = () => {
     <p class="hint" style="margin-top:14px">These phases are a scaffold, not a recipe. Read the original sources and follow your supervisor’s guidance.</p></div>`;
 };
 
+/* ---------- Learn coding first (bridging lesson, no AI: fixed answer keys) ---------- */
+const LEARN_TEACHERS = [
+  ['Ms. Campbell, primary teacher, rural Jamaica', 'I have forty-two children in one room. By the time I get round to the ones who need extra help, the bell has gone.'],
+  ['Mr. Ramdial, secondary teacher, Trinidad', 'We are told to differentiate every lesson, but there is one projector for the whole school and I mark until midnight.'],
+  ['Mrs. Joseph, primary teacher, Saint Lucia', 'When the principal gave us a planning period together, we started sharing resources and I finally reached my slower readers.']
+];
+const LEARN_TERMS = [
+  ['quote', 'Quotation', 'ocean', 'The participant’s exact words, copied without change.', '“I have forty-two children in one room.”', 'What did the participant actually say?'],
+  ['code', 'Code', 'hibiscus', 'A short label for what one piece of data means. It can describe or interpret.', 'Overcrowded classroom', 'What does this statement mean?'],
+  ['cat', 'Category', 'palm', 'A group of related codes. It names a topic but makes no claim.', 'Classroom and workload pressures', 'What other statements express related ideas?'],
+  ['theme', 'Theme', 'bougain', 'A pattern of shared meaning, organised around one central idea, that helps answer the research question. It makes a claim the evidence must support.', 'Institutional conditions constrain inclusive teaching', 'What important pattern does this reveal about the research question?']
+];
+const LEARN_SORT = [
+  ['I have forty-two children in one room.', ['quote'], 'These are Ms. Campbell’s exact words. Evidence comes first and is never changed.'],
+  ['Overcrowded classroom', ['code'], 'A short label for what one statement means. It stays close to the data.'],
+  ['Not enough time for learners who need extra help', ['code'], 'An interpretive code: it states what “the bell has gone” means for the children who need help.'],
+  ['one projector for the whole school', ['quote'], 'Mr. Ramdial’s own words. Short phrases can be quotations too.'],
+  ['Limited resources', ['code', 'cat'], 'Either answer can be right. As a label for one statement it is a code. If it groups “one projector”, “no textbooks” and similar codes, it is a category. Can you explain your choice? That matters more than the label.'],
+  ['Classroom and workload pressures', ['cat'], 'It groups several codes (class size, marking, resources) under one topic heading, but makes no claim about what they mean together.'],
+  ['Challenges teachers face', ['cat'], 'This looks like a theme but is a topic heading. It tells us what the data are about, not what they show. Braun and Clarke call this a “topic summary”.'],
+  ['Inclusion is expected of teachers but not resourced, and it becomes possible only when schools create shared time', ['theme'], 'A theme: a central idea that connects all three teachers and helps answer the research question. Mrs. Joseph’s account is the contrasting case that sharpens the claim.']
+];
+const LEARN_PAIRS = [
+  ['Overcrowded classroom', 'Not enough time for learners who need extra help', 'yes', 'These codes usually belong together. Both describe conditions that limit a teacher’s attention to individual children, so they could share a category such as “Classroom pressures”.'],
+  ['Marking until midnight', 'Sharing resources with colleagues', 'no', 'These are usually not the same category. One is a pressure and the other is a support. Both might still inform one theme about how working conditions shape inclusion, if your argument links them.'],
+  ['Principal created shared planning time', 'Sharing resources with colleagues', 'yes', 'These usually belong together. Both describe collegial support that leadership makes possible, and Mrs. Joseph links them herself.']
+];
+const LEARN_STEPS = ['Four words, four jobs', 'Sort the examples', 'The four questions', 'Do these belong together?', 'Ready to code'];
+const learnOn = () => CFG.learn !== 'off' && !CFG.hide.includes('learn');
+const learnDone = () => PROJECTS.some(p => p.learn && p.learn.done);
+const learnWords = s => words(String(s || ''));
+
+V.learn = () => {
+  const L = P.learn; const st = Math.min(Math.max(+L.step || 0, 0), LEARN_STEPS.length - 1);
+  const tabs = `<div class="lsteps" role="tablist" aria-label="Lesson steps">${LEARN_STEPS.map((t, i) => `<button role="tab" aria-selected="${i === st}" class="${i === st ? 'on' : ''}" data-act="learnStep" data-s="${i}"><span>${i + 1}</span>${t}</button>`).join('')}</div>`;
+  const nav = `<div class="row" style="margin-top:16px;justify-content:space-between">${st ? `<button class="btn" data-act="learnStep" data-s="${st - 1}">← Back</button>` : '<span></span>'}${st < LEARN_STEPS.length - 1 ? `<button class="btn primary" data-act="learnStep" data-s="${st + 1}">Next: ${LEARN_STEPS[st + 1]} →</button>` : ''}</div>`;
+  const statements = `<div class="card" style="margin-bottom:14px"><h2 style="margin-top:0">Three teacher statements</h2><p class="hint">Fictional data for practice. Research question: <i>How do Caribbean primary and secondary teachers experience inclusive teaching?</i></p>${LEARN_TEACHERS.map(([who, said]) => `<blockquote>${esc(said)}<div class="hint">${esc(who)}</div></blockquote>`).join('')}</div>`;
+  let body = '';
+  if (st === 0) body = `<div class="card"><h2 style="margin-top:0">A theme is not simply a bigger category</h2>
+    <p>Analysis moves up a ladder. Each rung has a different job, and each answers one question.</p>
+    <div class="ladder">${LEARN_TERMS.map(([k, name, c, def, ex, q], i) => `${i ? '<span class="arr" aria-hidden="true">➜</span>' : ''}<div class="rung" style="--rc:var(--c-${c})"><b>${i + 1}. ${name}</b><div class="q">${esc(q)}</div><p>${esc(def)}</p><div class="ex">e.g. ${esc(ex)}</div></div>`).join('')}</div>
+    <h3>The most common mistake</h3>
+    <p>Students often list <b>class size</b>, <b>teacher workload</b> and <b>limited resources</b> as three themes. They are better treated as codes or categories: they name topics but say nothing about what the topics mean together. A theme such as <b>“institutional conditions constrain inclusive teaching”</b> makes a claim. It is only a theme if the evidence supports it.</p>
+    <h3>Why this feels hard</h3>
+    <p>If you learned research methods by turning concepts into variables and scores, interpretation can feel like guessing. It is not guessing: you make a decision and show the evidence for it. Different labels can be acceptable if you can explain how they represent the data.</p>
+    <p class="hint">In reflexive thematic analysis (Braun &amp; Clarke), themes are patterns of shared meaning united by a central organising concept. They are developed by the researcher, not found by clustering codes. Codebook and framework approaches use more structured, sometimes predefined, categories. Check which approach your course uses.</p></div>`;
+  if (st === 1) {
+    const chk = L.sortChecked; let right = 0;
+    const items = LEARN_SORT.map(([txt, ok, why], i) => { const pick = L.sort[i]; const good = pick && ok.includes(pick); if (good) right++;
+      return `<div class="lq"><div><b>${i + 1}.</b> ${esc(txt)}</div>
+        <div class="row" style="margin-top:6px" role="group" aria-label="Item ${i + 1}">${LEARN_TERMS.map(([k, name]) => `<button class="btn sm ${pick === k ? 'primary' : ''}" aria-pressed="${pick === k}" data-act="learnSort" data-i="${i}" data-k="${k}">${name}</button>`).join('')}</div>
+        ${chk && pick ? `<div class="fb ${good ? 'ok' : 'no'}"><b>${good ? 'Yes.' : 'Think again.'}</b> ${esc(why)}</div>` : ''}</div>`; }).join('');
+    const all = LEARN_SORT.every((_, i) => L.sort[i]);
+    body = `${statements}<div class="card"><h2 style="margin-top:0">Is it a quotation, a code, a category or a theme?</h2><p class="hint">Choose one for each item, then check. There is no score to submit: the feedback explains each decision.</p>${items}
+      <div class="row" style="margin-top:10px"><button class="btn primary" data-act="learnCheck" ${all ? '' : 'disabled'}>Check my answers</button>${all ? '' : '<span class="hint">Answer all eight to check.</span>'}${chk ? `<b>${right} of ${LEARN_SORT.length} match the guide.</b>` : ''}</div>
+      ${chk ? `<label class="f" for="lex">Explain one decision in your own words</label><div class="hint">Pick an item you found difficult. Why did you label it that way? This is the skill your examiner is looking for.</div><textarea id="lex" data-bind="learn||explain" rows="3">${esc(L.explain)}</textarea>
+      <p class="hint"><b>Compare with a classmate.</b> Different labels can both be acceptable if each of you can explain how the label represents the evidence.</p>` : ''}</div>`;
+  }
+  if (st === 2) {
+    const qs = LEARN_TERMS.map(t => t[5]);
+    const filled = [1, 2, 3, 4].every(n => learnWords(L.fq[n]) >= 2);
+    const model = ['“there is one projector for the whole school and I mark until midnight”', 'Two codes: “Scarce teaching resources” and “Workload spills into personal time”.', 'Ms. Campbell’s “forty-two children in one room” also describes conditions outside the teacher’s control. Together they form a category such as “Working conditions”.', 'A potential theme: “Teachers are expected to include every learner, but the conditions to do so are not provided.” Mrs. Joseph is a contrasting case: when shared time was created, inclusion became possible. The theme holds only if evidence across participants supports it.'];
+    body = `${statements}<div class="card"><h2 style="margin-top:0">Worked example: Mrs. Joseph</h2>
+      <ol class="fq"><li><b>${esc(qs[0])}</b><br>“we started sharing resources and I finally reached my slower readers”</li>
+      <li><b>${esc(qs[1])}</b><br>Code: “Collaboration makes differentiation possible”.</li>
+      <li><b>${esc(qs[2])}</b><br>Related codes: “Principal created shared planning time”, “Sharing resources with colleagues”. Category: “Collegial support”.</li>
+      <li><b>${esc(qs[3])}</b><br>Support from leadership and colleagues appears to make inclusion achievable. This is a possible theme, if other participants show the same pattern.</li></ol></div>
+      <div class="card" style="margin-top:14px"><h2 style="margin-top:0">Your turn: Mr. Ramdial</h2><p class="hint">Answer the four questions for Mr. Ramdial’s statement, then compare with a model answer.</p>
+      ${qs.map((q, i) => `<label class="f" for="fq${i + 1}">${i + 1}. ${esc(q)}</label><textarea id="fq${i + 1}" rows="2" data-bind="learn||fq.${i + 1}">${esc(L.fq[i + 1])}</textarea>`).join('')}
+      <div class="row" style="margin-top:10px"><button class="btn primary" data-act="learnModel">Compare with a model answer</button><span class="hint">Write something for all four questions first.</span></div>
+      ${L.fqShown && filled ? `<div class="fb ok" style="margin-top:10px"><b>One possible answer</b> (yours can differ and still be good):<ol class="fq">${model.map(m => `<li>${esc(m)}</li>`).join('')}</ol></div>` : ''}</div>`;
+  }
+  if (st === 3) {
+    body = `<div class="card"><h2 style="margin-top:0">Do these codes belong together?</h2>
+      <p>This is the key test. If you cannot explain why two codes belong together, what you need next is practice with grouping ideas, not more software.</p>
+      ${LEARN_PAIRS.map(([a, b, key, why], i) => { const pick = L.pairs[i]; const reason = (L.pairWhy || {})[i] || ''; const shown = (L.pairShown || {})[i];
+        return `<div class="lq"><div class="row"><span class="chip" style="--c:var(--c-hibiscus);cursor:default"><i></i>${esc(a)}</span><b>+</b><span class="chip" style="--c:var(--c-hibiscus);cursor:default"><i></i>${esc(b)}</span></div>
+        <div class="row" style="margin-top:6px" role="group" aria-label="Pair ${i + 1}">${[['yes', 'Belong together'], ['no', 'Do not belong together']].map(([k, l]) => `<button class="btn sm ${pick === k ? 'primary' : ''}" aria-pressed="${pick === k}" data-act="learnPair" data-i="${i}" data-k="${k}">${l}</button>`).join('')}</div>
+        <label class="f" for="pw${i}">Why?</label><textarea id="pw${i}" rows="2" data-bind="learn||pairWhy.${i}" placeholder="Explain in at least one full sentence.">${esc(reason)}</textarea>
+        <div class="row" style="margin-top:6px"><button class="btn sm" data-act="learnPairShow" data-i="${i}">See the guide’s view</button></div>
+        ${shown ? `<div class="fb ${pick === key ? 'ok' : 'no'}">${pick === key ? '<b>Same view as the guide.</b> ' : '<b>The guide sees it differently.</b> If your reason is strong, you may still be right. '}${esc(why)}</div>` : ''}</div>`; }).join('')}
+      <p class="hint"><b>Compare with a classmate.</b> Read each other’s reasons. A strong reason points to what the codes mean, not just to shared words.</p></div>`;
+  }
+  if (st === 4) {
+    const checks = ['I can tell a quotation from a code.', 'I can explain why two codes belong in the same category.', 'I can explain why a category (a topic) is not yet a theme (a claim).', 'I can say what evidence a theme needs before I can claim it.'];
+    const allOk = checks.every((_, i) => (L.ready || {})[i]);
+    body = `<div class="card"><h2 style="margin-top:0">Ready to code?</h2>
+      <p>The goal is not to name a theme. It is to explain how and why you developed it from the evidence. Tick each statement that is true for you.</p>
+      ${checks.map((c, i) => `<label class="row" style="font-size:14px;margin:6px 0"><input type="checkbox" data-bind="learn||ready.${i}" data-rr="1" ${(L.ready || {})[i] ? 'checked' : ''}> ${esc(c)}</label>`).join('')}
+      ${allOk ? '' : '<p class="hint">If you cannot tick one yet, go back to that step or ask your lecturer. It is normal to need a second try.</p>'}
+      <div class="row" style="margin-top:12px"><button class="btn primary" data-act="learnFinish" ${allOk ? '' : 'disabled'}>${L.done ? 'Lesson complete: go to coding' : 'Finish the lesson and start coding'}</button>
+      ${!P.sources.length ? '<span class="hint">You will be offered the practice study next.</span>' : ''}</div>
+      <p class="hint" style="margin-top:10px">Inside the Lab, the same ladder continues: you <b>code</b> evidence in Code, define codes and group them into <b>categories</b> in the Codebook, and build <b>themes</b> with a central idea in Themes &amp; map.</p></div>`;
+  }
+  return `<h1>Learn coding first</h1>
+  <p class="lead">A short lesson (about 15–20 minutes) before you use the Lab. It shows the difference between a quotation, a code, a category and a theme, so the coding tools make sense and you don’t get stuck.${L.done ? ' <span class="pill">Completed</span>' : ''}</p>
+  ${tabs}${body}${nav}`;
+};
+function learnGate(){
+  const req = CFG.learn === 'require';
+  return `<h1>2. Code</h1><div class="card" style="max-width:760px"><h2 style="margin-top:0">Before you code: learn the ladder</h2>
+    <p>Coding is easier once you can tell a <b>quotation</b>, a <b>code</b>, a <b>category</b> and a <b>theme</b> apart. A short lesson with practice examples takes about 15–20 minutes and saves a lot of frustration later.</p>
+    ${req ? '<p class="hint">Your lecturer has asked everyone to complete this lesson before coding.</p>' : ''}
+    <div class="row" style="margin-top:10px"><button class="btn primary" data-act="go" data-v="learn">Start the lesson</button>${req ? '' : '<button class="btn" data-act="learnSkip">I have done this before: skip</button>'}</div></div>`;
+}
+
 V.sources = () => {
   const ix = IX();
   const rows = P.sources.map(s => { const cov = coverage(s, ix.segBySrc[s.id] || []); return `<tr>
@@ -572,6 +694,7 @@ V.sources = () => {
 
 /* ---------- Coding workspace ---------- */
 V.code = () => {
+  if (learnOn() && !learnDone() && !S.learnSkip) return learnGate();
   if (!P.sources.length) return `<h1>2. Code</h1><div class="card empty">Add a source first. <button class="btn primary" data-act="go" data-v="sources">Go to Sources</button></div>`;
   if (!find(P.sources, S.sourceId)) S.sourceId = P.sources[0].id;
   const src = find(P.sources, S.sourceId);
@@ -1028,6 +1151,14 @@ V.about = () => `<h1>About and licence</h1>
    ============================================================ */
 const ACT = {
   go: t => go(t.dataset.v),
+  learnStep: t => { P.learn.step = +t.dataset.s; touch(); render(); window.scrollTo(0, 0); },
+  learnSort: t => { P.learn.sort[t.dataset.i] = t.dataset.k; touch(); render(); },
+  learnCheck(){ P.learn.sortChecked = true; touch(); render(); },
+  learnModel(){ if (![1, 2, 3, 4].every(n => learnWords(P.learn.fq[n]) >= 2)) { toast('Write an answer to all four questions first.'); return; } P.learn.fqShown = true; touch(); render(); },
+  learnPair: t => { P.learn.pairs[t.dataset.i] = t.dataset.k; touch(); render(); },
+  learnPairShow(t){ const i = t.dataset.i; if (!P.learn.pairs[i]) { toast('Choose an answer first.'); return; } if (learnWords(P.learn.pairWhy[i]) < 6) { toast('Explain your reason in at least one full sentence first.'); return; } P.learn.pairShown[i] = true; touch(); render(); },
+  learnFinish(){ if (!P.learn.done) { P.learn.done = true; P.learn.doneAt = now(); log('Completed the coding lesson', 'Quotation, code, category and theme'); } touch(); go('code'); if (!P.sources.length) toast('Load the practice study from the Guide, or add your own sources.'); },
+  learnSkip(){ S.learnSkip = true; log('Skipped the coding lesson', ''); touch(); render(); },
   async newProject(){ const r = await ask('New project', [{ name:'name', label:'Project name', value:'', ph:'e.g. Teachers’ use of technology in rural schools' }], 'Create'); if (!r) return;
     P = blankProject(r.name || 'Untitled project'); PROJECTS.push(P); log('Created project', P.name); await save(); S.view = 'guide'; S.sourceId = null; S.segmentId = null; render(); },
   exportBackup(){ download(fileSafe(P.name) + '.cqrl.json', JSON.stringify(Object.assign({ app:APP.short, appVersion:APP.version, exported:now() }, P), null, 1), 'application/json'); toast('Backup downloaded'); },
@@ -1198,6 +1329,7 @@ document.addEventListener('click', e => {
 function setPath(obj, path, val){ const ks = path.split('.'); let o = obj; ks.slice(0, -1).forEach(k => { o = o[k] ||= {}; }); o[ks[ks.length - 1]] = val; }
 function bindTarget(kind, id){
   if (kind === 'project') return P;
+  if (kind === 'learn') return P.learn;
   if (kind === 'tri') return P.triangulation[id] ||= { rows:{}, types:{}, interpretation:'' };
   if (kind === 'write') return P.writeup[id] ||= { claim:'', evidence:[], literature:'', alternatives:'', finding:'' };
   return find(P[kind] || [], id);

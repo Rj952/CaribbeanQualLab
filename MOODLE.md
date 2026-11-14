@@ -17,9 +17,12 @@ Add a **URL** resource that points to **https://rj952.github.io/CaribbeanQualLab
 | `institution` | Shown on the About page | `&institution=UWI%20Open%20Campus` |
 | `method` | Default approach for new projects: `rta`, `framework`, `content`, `gt`, `narrative` or `ipa` | `&method=framework` |
 | `lock=1` | Together with `method`, stops students changing the approach | `&method=rta&lock=1` |
+| `learn` | Controls the *Learn coding first* lesson. `require`: students must finish it before coding (no skip). `off`: hides it. If you leave it out, the lesson is offered and students can skip it. | `&learn=require` |
 | `hide` | Hides sections (comma-separated): `literature,themes,triangulate,explore,journal,write,export` | `&hide=journal` |
 
-Example: `https://rj952.github.io/CaribbeanQualLab/?course=EDRS6001&method=rta&lock=1`
+Example: `https://rj952.github.io/CaribbeanQualLab/?course=EDRS6001&method=rta&lock=1&learn=require`
+
+Completion is recorded in the project's decision trail ("Completed the coding lesson"), and students' lesson answers are included in their `.cqrl.json` backup.
 
 ## Suggested assessment
 Ask students to submit:
