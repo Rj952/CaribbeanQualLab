@@ -22,6 +22,8 @@ Add a **URL** resource that points to **https://rj952.github.io/CaribbeanQualLab
 
 Example: `https://rj952.github.io/CaribbeanQualLab/?course=EDRS6001&method=rta&lock=1&learn=require`
 
+**Student handout:** add the Student Quick Guide as a second resource beside the Lab link: either the URL `https://rj952.github.io/CaribbeanQualLab/CQRL-Student-Quick-Guide.pdf`, or upload `CQRL-Student-Quick-Guide.pdf` as a File.
+
 Completion is recorded in the project's decision trail ("Completed the coding lesson"), and students' lesson answers are included in their `.cqrl.json` backup.
 
 ## Suggested assessment

@@ -206,7 +206,7 @@ svg text{fill:var(--ink);font:12px system-ui,sans-serif}
    ============================================================ */
 const APP = { name:'Caribbean Qualitative Research Lab', short:'CQRL', version:'0.1.0', edition:'Community Edition',
   license:'GNU AGPL-3.0-or-later', author:'Dr. Rohan Jowallah', copyright:'Copyright © 2026 Dr. Rohan Jowallah',
-  repo:'https://github.com/Rj952/CaribbeanQualLab', site:'https://rj952.github.io/CaribbeanQualLab/' };
+  repo:'https://github.com/Rj952/CaribbeanQualLab', site:'https://rj952.github.io/CaribbeanQualLab/', guidePdf:'https://rj952.github.io/CaribbeanQualLab/CQRL-Student-Quick-Guide.pdf' };
 const urlP = new URLSearchParams(location.search);
 const CFG = Object.assign({ institution:'', course:'', method:'', hide:[], learn:'' }, window.CQRL_CONFIG || {});
 if (urlP.get('course')) CFG.course = urlP.get('course');
@@ -537,6 +537,7 @@ V.guide = () => {
   return `<h1>${esc(P.name)}</h1>
   <p class="lead">Move from what participants said to a defensible finding: code the evidence, connect it to literature, infer, interpret, triangulate, then write up. Everything stays on this device. No AI is used and nothing is uploaded.</p>
   ${journey()}
+  <p class="hint" style="margin:-8px 0 14px">New to the Lab? Read the <a href="${APP.guidePdf}" target="_blank" rel="noopener">Student Quick Guide (PDF, 4 pages)</a>.</p>
   ${learnOn() && !learnDone() ? `<div class="card" style="margin-bottom:14px;--sec:var(--c-mango)"><b>New to coding?</b> Start with a short lesson (about 15–20 minutes) on the difference between a quotation, a code, a category and a theme. It makes the rest of the Lab much easier.<div class="row" style="margin-top:8px"><button class="btn primary" data-act="go" data-v="learn">Learn coding first</button></div></div>` : ''}
   ${!P.sources.length ? `<div class="card" style="margin-bottom:14px"><b>New here?</b> Load a short fictional practice study (teachers and classroom technology in the Caribbean) to learn the workflow, or go to <a href="#" data-act="go" data-v="sources">Sources</a> to add your own transcripts.<div class="row" style="margin-top:8px"><button class="btn primary" data-act="loadSample">Load practice study</button></div></div>` : ''}
   <div class="grid2">
@@ -664,7 +665,7 @@ V.learn = () => {
       <p class="hint" style="margin-top:10px">Inside the Lab, the same ladder continues: you <b>code</b> evidence in Code, define codes and group them into <b>categories</b> in the Codebook, and build <b>themes</b> with a central idea in Themes &amp; map.</p></div>`;
   }
   return `<h1>Learn coding first</h1>
-  <p class="lead">A short lesson (about 15–20 minutes) before you use the Lab. It shows the difference between a quotation, a code, a category and a theme, so the coding tools make sense and you don’t get stuck.${L.done ? ' <span class="pill">Completed</span>' : ''}</p>
+  <p class="lead">A short lesson (about 15–20 minutes) before you use the Lab. It shows the difference between a quotation, a code, a category and a theme, so the coding tools make sense and you don’t get stuck. The <a href="${APP.guidePdf}" target="_blank" rel="noopener">Student Quick Guide (PDF)</a> explains every step.${L.done ? ' <span class="pill">Completed</span>' : ''}</p>
   ${tabs}${body}${nav}`;
 };
 function learnGate(){

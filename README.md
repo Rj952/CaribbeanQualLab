@@ -8,7 +8,9 @@
 
 CQRL is one HTML file. It runs in any modern browser on Windows, macOS, ChromeOS, Linux or a tablet. It works without internet, needs no account and no installation, and sends nothing anywhere. Students can open it from a USB stick, a shared drive, or a Moodle course page.
 
-> **Open it now:** **https://rj952.github.io/CaribbeanQualLab/**. Or download [`index.html`](index.html) and double-click it to use it offline.
+> **Student Quick Guide:** [CQRL-Student-Quick-Guide.pdf](CQRL-Student-Quick-Guide.pdf), a 4-page step-by-step guide for students.
+
+**Open it now:** **https://rj952.github.io/CaribbeanQualLab/**. Or download [`index.html`](index.html) and double-click it to use it offline.
 
 ## What students can do
 
